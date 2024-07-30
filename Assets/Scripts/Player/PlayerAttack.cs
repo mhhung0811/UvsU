@@ -24,7 +24,6 @@ public class PlayerAttack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CanAttack();
         ResetSkill();
     }
     private void LoadComponent()
@@ -32,7 +31,7 @@ public class PlayerAttack : MonoBehaviour
         this._cool_down = 0.3f;
         this._cool_down_count = 0f;
     }
-    private void CanAttack()
+    public void HandleAttack()
     {
         if(Input.GetKeyDown(KeyCode.P) && (_cool_down_count <= 0))
         {
