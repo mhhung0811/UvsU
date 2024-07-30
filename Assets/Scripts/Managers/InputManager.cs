@@ -39,5 +39,9 @@ public class InputManager : MonoBehaviour
         {
             //player.GetComponent<PlayerMovement>().HandleJump(true);
         }
+        if (Input.GetKeyDown(playerKeys.attack))
+        {
+            //player.GetComponent<PlayerMovement>().HandleAttack(true);
+        }
     }
 }
