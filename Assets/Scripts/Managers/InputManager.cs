@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
@@ -8,6 +8,8 @@ public class InputManager : MonoBehaviour
     [SerializeField] private RecordManager recordManager;
     [SerializeField] private GameObject player;
     [SerializeField] private RecordKeyConfig playerKeys;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -39,19 +41,30 @@ public class InputManager : MonoBehaviour
             recordManager.RunRecord(recordManager.actions);
         }
 
-        if (Input.GetKey(playerKeys.moveLeft))
-        {
-            player.GetComponent<PlayerMovement>().HandleMovement(-1);
-            has_click_left = true;
-        }
-        if (Input.GetKey(playerKeys.moveRight))
-        {
-            player.GetComponent<PlayerMovement>().HandleMovement(1);
-            has_click_right = true;
-        }
         if (Input.GetKeyDown(playerKeys.jump))
         {
             player.GetComponent<PlayerMovement>().HandleJump();
+        }
+
+        bool moveLeft = Input.GetKey(playerKeys.moveLeft);
+        bool moveRight = Input.GetKey(playerKeys.moveRight);
+
+        
+        if( moveLeft ^ moveRight )
+        {
+            // Kiểm tra phím di chuyển trái
+            if (moveLeft)
+            {
+                player.GetComponent<PlayerMovement>().HandleMovement(-1);
+                Debug.Log("Left");
+            }
+
+            // Kiểm tra phím di chuyển phải
+            if (moveRight)
+            {
+                player.GetComponent<PlayerMovement>().HandleMovement(1);
+                Debug.Log("Right");
+            }
         }
         if (Input.GetKeyDown(playerKeys.attack))
         {
@@ -59,7 +72,7 @@ public class InputManager : MonoBehaviour
         }
 
 
-        if(!has_click_left  &&  !has_click_right) 
+        /*if(!has_click_left  &&  !has_click_right) 
         {
             player.GetComponent<PlayerAnimation>().SetBoolRunning(false);
         }
@@ -67,6 +80,6 @@ public class InputManager : MonoBehaviour
         if (ground_check)
         {
             player.GetComponent<PlayerAnimation>().SetBoolGround(true);
-        }
+        }*/
     }
 }
