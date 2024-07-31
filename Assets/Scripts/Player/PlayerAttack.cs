@@ -33,7 +33,7 @@ public class PlayerAttack : MonoBehaviour
     }
     public void HandleAttack()
     {
-        if(Input.GetKeyDown(KeyCode.P) && (_cool_down_count <= 0))
+        if((_cool_down_count <= 0))
         {
             _animation.SetTriggerAttack();
             Attack();

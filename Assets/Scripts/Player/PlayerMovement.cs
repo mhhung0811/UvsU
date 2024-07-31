@@ -60,11 +60,11 @@ public class PlayerMovement : MonoBehaviour
         if( _isGrounded )
         {
             _animations.SetBoolGround(true);
+            Jump();
         }
         else
         {
             _animations.SetBoolGround(false);
-            Jump();
         }
         
     }
