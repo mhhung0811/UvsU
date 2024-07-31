@@ -20,6 +20,8 @@ public class RecordManager : MonoBehaviour
         timer = 0;
         isRecord = false;
 
+        actions = new List<IAction>();
+
         keyPos = new Dictionary<KeyCode, int>()
         {
             {recordKeys.moveLeft, 0 },

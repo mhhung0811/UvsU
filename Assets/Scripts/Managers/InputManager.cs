@@ -18,30 +18,51 @@ public class InputManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        HandleInput();
+    }
+    public void HandleInput()
+    {
+        bool has_click_left = false;
+        bool has_click_right = false;
         if (Input.GetKeyDown(KeyCode.T))
         {
             recordManager.StartRecord();
+            Debug.Log("Start Record");
         }
         else if (Input.GetKeyDown(KeyCode.Y))
         {
             recordManager.EndRecord();
+            Debug.Log("End Record");
         }
 
         if (Input.GetKey(playerKeys.moveLeft))
         {
-            //player.GetComponent<PlayerMovement>().HandleMovement(-1);
+            player.GetComponent<PlayerMovement>().HandleMovement(-1);
+            has_click_left = true;
         }
         if (Input.GetKey(playerKeys.moveRight))
         {
-            //player.GetComponent<PlayerMovement>().HandleMovement(1);
+            player.GetComponent<PlayerMovement>().HandleMovement(1);
+            has_click_right = true;
         }
         if (Input.GetKeyDown(playerKeys.jump))
         {
-            //player.GetComponent<PlayerMovement>().HandleJump(true);
+            player.GetComponent<PlayerMovement>().HandleJump();
         }
         if (Input.GetKeyDown(playerKeys.attack))
         {
-            //player.GetComponent<PlayerMovement>().HandleAttack(true);
+            player.GetComponent<PlayerAttack>().HandleAttack();
+        }
+
+
+        if(!has_click_left  &&  !has_click_right) 
+        {
+            player.GetComponent<PlayerAnimation>().SetBoolRunning(false);
+        }
+        bool ground_check = player.GetComponent<PlayerMovement>().GroundCheck();
+        if (ground_check)
+        {
+            player.GetComponent<PlayerAnimation>().SetBoolGround(true);
         }
     }
 }

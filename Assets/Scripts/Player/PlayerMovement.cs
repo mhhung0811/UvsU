@@ -29,8 +29,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        HandleMovement();
-        HandleJump();
         SetYVelocity();
     }
 
@@ -40,20 +38,13 @@ public class PlayerMovement : MonoBehaviour
         _jumpForce = 30f;
     }
 
-    private void HandleMovement()
+    public void HandleMovement(float value)
     {
-        float moveDirectionTemp = Input.GetAxisRaw("Horizontal");
+        float moveDirectionTemp = value;
 
-        if (moveDirectionTemp == 0f && (_moveDirection != 0f))
-        {
-            _animations.SetBoolRunning(false);
-        }
-        else if (moveDirectionTemp != 0f)
-        {
-            _moveDirection = moveDirectionTemp;
-            _model.SetDirection(_moveDirection);
-            _animations.SetBoolRunning(true);
-        }
+        _moveDirection = moveDirectionTemp;
+        _model.SetDirection(_moveDirection);
+        _animations.SetBoolRunning(true);
 
         Move(moveDirectionTemp);
     }
@@ -63,14 +54,14 @@ public class PlayerMovement : MonoBehaviour
         _rigidBody.velocity = new Vector2(_runVelocity * direction, _rigidBody.velocity.y);
     }
 
-    private void HandleJump()
+    public void HandleJump()
     {
         _isGrounded = GroundCheck();
         if( _isGrounded )
         {
             _animations.SetBoolGround(true);
         }
-        if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
+        else
         {
             _animations.SetBoolGround(false);
             Jump();
@@ -83,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
         _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpForce);
     }
 
-    private bool GroundCheck()
+    public bool GroundCheck()
     {
         return Physics2D.OverlapCircle(_groundCheck.position, 0.1f, _groundLayer);
     }
