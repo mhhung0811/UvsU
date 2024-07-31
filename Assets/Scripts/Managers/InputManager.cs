@@ -34,6 +34,10 @@ public class InputManager : MonoBehaviour
             recordManager.EndRecord();
             Debug.Log("End Record");
         }
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            recordManager.RunRecord(recordManager.actions);
+        }
 
         if (Input.GetKey(playerKeys.moveLeft))
         {

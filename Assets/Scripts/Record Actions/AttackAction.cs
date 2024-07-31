@@ -12,15 +12,16 @@ public class AttackAction : IAction
     {
         Debug.Log("Start Attack");
         float i = 0;
-        while (i < actionTime)
-        {
-            i += Time.deltaTime;
+        //while (i < actionTime)
+        //{
+        //    i += Time.deltaTime;
 
-            //Debug.Log("Running Left");
-            //obj.GetComponent<PlayerAttack>().Attack();
+        //    //Debug.Log("Running Left");
+        //    obj.GetComponent<PlayerAttack>().HandleAttack();
 
-            yield return new WaitForEndOfFrame();
-        }
+        //    yield return new WaitForEndOfFrame();
+        //}
+        obj.GetComponent<PlayerAttack>().HandleAttack();
         Debug.Log("End Attack");
         yield return null;
     }

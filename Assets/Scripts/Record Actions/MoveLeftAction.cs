@@ -17,7 +17,19 @@ public class MoveLeftAction : IAction
             i += Time.deltaTime;
 
             //Debug.Log("Running Left");
-            //obj.GetComponent<PlayerMovement>().HandleMovement(-1);
+            bool has_click_left = false;
+            obj.GetComponent<PlayerMovement>().HandleMovement(-1);
+            has_click_left = true;
+
+            if (!has_click_left)
+            {
+                obj.GetComponent<PlayerAnimation>().SetBoolRunning(false);
+            }
+            bool ground_check = obj.GetComponent<PlayerMovement>().GroundCheck();
+            if (ground_check)
+            {
+                obj.GetComponent<PlayerAnimation>().SetBoolGround(true);
+            }
 
             yield return new WaitForEndOfFrame();
         }

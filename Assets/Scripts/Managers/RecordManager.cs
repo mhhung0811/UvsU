@@ -9,7 +9,7 @@ public class RecordManager : MonoBehaviour
     [SerializeField] private GameObject player;
 
     private Dictionary<KeyCode, int> keyPos;
-    private List<IAction> actions;
+    public List<IAction> actions { get; private set; }
     private float timer;
     private bool isRecord;
 
