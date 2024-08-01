@@ -11,9 +11,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField, Range(1f, 100f)] private float _jumpForce = 50f;
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private Transform _wallCheck;
 
     private float _moveDirection;
-    private bool _isGrounded;
+    [SerializeField] private bool _isGrounded;
 
     private void Awake()
     {
@@ -29,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        _isGrounded =  GroundCheck();
         SetYVelocity();
     }
 
@@ -36,6 +38,7 @@ public class PlayerMovement : MonoBehaviour
     {
         _runVelocity = 8f;
         _jumpForce = 30f;
+        _moveDirection = 0;
     }
 
     public void HandleMovement(float value)
@@ -44,19 +47,28 @@ public class PlayerMovement : MonoBehaviour
 
         _moveDirection = moveDirectionTemp;
         _model.SetDirection(_moveDirection);
-        _animations.SetBoolRunning(true);
+        
 
         Move(moveDirectionTemp);
     }
 
     private void Move(float direction)
     {
-        _rigidBody.velocity = new Vector2(_runVelocity * direction, _rigidBody.velocity.y);
+        if ((_rigidBody.velocity.x * direction) < 0 || WallCheck())
+        {
+            _rigidBody.velocity = new Vector2(0, _rigidBody.velocity.y);
+            _animations.SetBoolRunning(false);
+        }
+        else
+        {
+            _rigidBody.velocity = new Vector2(_runVelocity * direction, _rigidBody.velocity.y);
+            _animations.SetBoolRunning(true);
+        }
     }
 
     public void HandleJump()
     {
-        _isGrounded = GroundCheck();
+        
         if( _isGrounded )
         {
             _animations.SetBoolGround(true);
@@ -76,10 +88,17 @@ public class PlayerMovement : MonoBehaviour
 
     public bool GroundCheck()
     {
-        return Physics2D.OverlapCircle(_groundCheck.position, 0.1f, _groundLayer);
+        bool check = Physics2D.OverlapCircle(_groundCheck.position, 0.01f, _groundLayer);
+        _animations.SetBoolGround(check);
+        return check;
     }
     private void SetYVelocity()
     {
         _animations.SetVelocityY(_rigidBody.velocity.y);
+    }
+
+    public bool WallCheck()
+    {
+        return Physics2D.OverlapCircle(_wallCheck.position, 0.1f, _groundLayer);
     }
 }
