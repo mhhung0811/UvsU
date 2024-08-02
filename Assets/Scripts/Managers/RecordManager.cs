@@ -14,8 +14,7 @@ public class RecordManager : MonoBehaviour
     //private bool isRecord;
 
     public List<List<IAction>> Records { get; private set; }
-    private int recordOrder;
-    private List<float> recordTime;
+    private List<float> recordTimes;
 
     
     // Start is called before the first frame update
@@ -25,10 +24,9 @@ public class RecordManager : MonoBehaviour
         //isRecord = false;
 
         // actions = new List<IAction>();
-        recordOrder = 0;
         Records = new List<List<IAction>>();
 
-        recordTime = new List<float>();
+        recordTimes = new List<float>();
 
         keyPos = new Dictionary<KeyCode, int>()
         {
@@ -67,7 +65,7 @@ public class RecordManager : MonoBehaviour
     public IEnumerator StartRecord(float time)
     {
         float timer = 0;
-        recordTime.Add(time);
+        recordTimes.Add(time);
         //isRecord = true;
 
         while (timer < time)
@@ -75,19 +73,19 @@ public class RecordManager : MonoBehaviour
             timer += Time.deltaTime;
             if (Input.GetKeyDown(recordKeys.moveLeft))
             {
-                StartCoroutine(EndAction(recordOrder, recordKeys.moveLeft, timer, time));
+                StartCoroutine(EndAction(recordTimes.Count - 1, recordKeys.moveLeft, timer, time));
             }
             if (Input.GetKeyDown(recordKeys.moveRight))
             {
-                StartCoroutine(EndAction(recordOrder, recordKeys.moveRight, timer, time));
+                StartCoroutine(EndAction(recordTimes.Count - 1, recordKeys.moveRight, timer, time));
             }
             if (Input.GetKeyDown(recordKeys.jump))
             {
-                StartCoroutine(EndAction(recordOrder, recordKeys.jump, timer, time));
+                StartCoroutine(EndAction(recordTimes.Count - 1, recordKeys.jump, timer, time));
             }
             if (Input.GetKeyDown(recordKeys.attack))
             {
-                StartCoroutine(EndAction(recordOrder, recordKeys.attack, timer, time));
+                StartCoroutine(EndAction(recordTimes.Count - 1, recordKeys.attack, timer, time));
             }
             yield return new WaitForEndOfFrame();
         }
