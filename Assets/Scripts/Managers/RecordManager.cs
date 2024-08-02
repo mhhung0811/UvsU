@@ -105,21 +105,19 @@ public class RecordManager : MonoBehaviour
             timer += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
-        //Debug.Log(actions.Count);
 
-        Records.Add(new List<IAction>(actions));
-        //Debug.Log(Records.Count);
-        //Debug.Log(actions[actions.Count-1].actionTime);
-        actions.Clear();
+        // error occur when hold key out of end time
+        // hot fix, might need improve
+        yield return new WaitForSeconds(0.5f);
+        EndRecord();
 
-        //Debug.Log(Records.Count);
         Debug.Log("End Record");
-        //EndRecord();
     }
 
     public void EndRecord()
     {
-        //isRecord = false;
+        Records.Add(new List<IAction>(actions));
+        actions.Clear();
     }
 
     public void RunRecord(List<IAction> listAction, GameObject actor)
@@ -179,16 +177,8 @@ public class RecordManager : MonoBehaviour
             keycode == recordKeys.jump ||
             keycode == recordKeys.attack)
         {
-            try
-            {
-                actions[keyPos[keycode]].actionTime = timer;
-                keyPressed[keycode] = false;
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-            }
-            
+            actions[keyPos[keycode]].actionTime = timer;
+            keyPressed[keycode] = false;
         }
         Debug.Log("End action");
     }
