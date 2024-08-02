@@ -6,9 +6,8 @@ public class JumpAction : IAction
 {
     public float startTime { get; set; }
     public float actionTime { get; set; }
-    private GameObject obj;
 
-    public IEnumerator Execute()
+    public IEnumerator Execute(GameObject actor)
     {
         Debug.Log("Start Jump");
         float i = 0;
@@ -21,15 +20,14 @@ public class JumpAction : IAction
 
         //    yield return new WaitForEndOfFrame();
         //}
-        obj.GetComponent<PlayerMovement>().HandleJump();
+        actor.GetComponent<PlayerMovement>().HandleJump();
         Debug.Log("End Jump");
         yield return null;
     }
 
-    public JumpAction(float startTime, float actionTime, GameObject obj)
+    public JumpAction(float startTime, float actionTime)
     {
         this.startTime = startTime;
-        this.actionTime = actionTime;
-        this.obj = obj;
+        this.actionTime = actionTime;        
     }
 }

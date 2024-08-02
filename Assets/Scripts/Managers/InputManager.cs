@@ -9,7 +9,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private RecordKeyConfig playerKeys;
 
-
+    private GameObject actor;
 
     // Start is called before the first frame update
     void Start()
@@ -24,21 +24,21 @@ public class InputManager : MonoBehaviour
     }
     public void HandleInput()
     {
-        bool has_click_left = false;
-        bool has_click_right = false;
+        //bool has_click_left = false;
+        //bool has_click_right = false;
         if (Input.GetKeyDown(KeyCode.T))
         {
-            recordManager.StartRecord();
+            recordManager.StartRecord(10);
             Debug.Log("Start Record");
         }
-        else if (Input.GetKeyDown(KeyCode.Y))
-        {
-            recordManager.EndRecord();
-            Debug.Log("End Record");
-        }
+        //else if (Input.GetKeyDown(KeyCode.Y))
+        //{
+        //    recordManager.EndRecord();
+        //    Debug.Log("End Record");
+        //}
         if (Input.GetKeyDown(KeyCode.U))
         {
-            recordManager.RunRecord(recordManager.actions);
+            //recordManager.RunRecord(recordManager.actions, actor);
         }
 
         if (Input.GetKeyDown(playerKeys.jump))
