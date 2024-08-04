@@ -6,9 +6,8 @@ public class MoveLeftAction : IAction
 {
     public float startTime { get; set; }
     public float actionTime { get; set; }
-    private GameObject obj;
 
-    public IEnumerator Execute()
+    public IEnumerator Execute(GameObject actor)
     {
         Debug.Log("Start Left");
         float i = 0;
@@ -18,17 +17,17 @@ public class MoveLeftAction : IAction
 
             //Debug.Log("Running Left");
             bool has_click_left = false;
-            obj.GetComponent<PlayerMovement>().HandleMovement(-1);
+            actor.GetComponent<PlayerMovement>().HandleMovement(-1);
             has_click_left = true;
 
             if (!has_click_left)
             {
-                obj.GetComponent<PlayerAnimation>().SetBoolRunning(false);
+                actor.GetComponent<PlayerAnimation>().SetBoolRunning(false);
             }
-            bool ground_check = obj.GetComponent<PlayerMovement>().GroundCheck();
+            bool ground_check = actor.GetComponent<PlayerMovement>().GroundCheck();
             if (ground_check)
             {
-                obj.GetComponent<PlayerAnimation>().SetBoolGround(true);
+                actor.GetComponent<PlayerAnimation>().SetBoolGround(true);
             }
 
             yield return new WaitForEndOfFrame();
@@ -37,10 +36,9 @@ public class MoveLeftAction : IAction
         yield return null;
     }
 
-    public MoveLeftAction(float startTime, float actionTime, GameObject obj)
+    public MoveLeftAction(float startTime, float actionTime)
     {
         this.startTime = startTime;
         this.actionTime = actionTime;
-        this.obj = obj;
     }
 }

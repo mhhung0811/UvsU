@@ -7,9 +7,10 @@ public class InputManager : MonoBehaviour
 {
     [SerializeField] private RecordManager recordManager;
     [SerializeField] private GameObject player;
+    [SerializeField] private GameObject iterator;
     [SerializeField] private RecordKeyConfig playerKeys;
 
-
+    private GameObject actor;
 
     // Start is called before the first frame update
     void Start()
@@ -24,21 +25,21 @@ public class InputManager : MonoBehaviour
     }
     public void HandleInput()
     {
-        bool has_click_left = false;
-        bool has_click_right = false;
+        //bool has_click_left = false;
+        //bool has_click_right = false;
         if (Input.GetKeyDown(KeyCode.T))
         {
-            recordManager.StartRecord();
-            Debug.Log("Start Record");
+            StartCoroutine(recordManager.StartRecord(5));
         }
-        else if (Input.GetKeyDown(KeyCode.Y))
+        //else if (Input.GetKeyDown(KeyCode.Y))
+        //{
+        //    recordManager.EndRecord();
+        //    Debug.Log("End Record");
+        //}
+        if (Input.GetKeyDown(KeyCode.Y))
         {
-            recordManager.EndRecord();
-            Debug.Log("End Record");
-        }
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            recordManager.RunRecord(recordManager.actions);
+            iterator.SetActive(true);
+            recordManager.RunRecord(recordManager.Records[0], iterator);
         }
 
         if (Input.GetKeyDown(playerKeys.jump))
@@ -56,14 +57,14 @@ public class InputManager : MonoBehaviour
             if (moveLeft)
             {
                 player.GetComponent<PlayerMovement>().HandleMovement(-1);
-                Debug.Log("Left");
+                //Debug.Log("Left");
             }
 
             // Kiểm tra phím di chuyển phải
             if (moveRight)
             {
                 player.GetComponent<PlayerMovement>().HandleMovement(1);
-                Debug.Log("Right");
+                //Debug.Log("Right");
             }
         }
         if (Input.GetKeyDown(playerKeys.attack))
