@@ -19,6 +19,7 @@ public class PlayGameController : MonoBehaviour
     {
         LoadComponent();
         _gameSceneUIManager.InitiateIconIter(_max_iteration);
+        AudioManager.Instance.PlayBGM(0);   
     }
 
     private void LoadComponent()

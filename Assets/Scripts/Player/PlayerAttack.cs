@@ -42,6 +42,7 @@ public class PlayerAttack : MonoBehaviour
     }
     private void Attack()
     {
+        AudioManager.Instance.PlayFX(4);
         BulletSpawner.Instance.Spawn("Bullet", _spawn_pos.position, new Vector3(0, 0, 0), _model.GetDirection());
     }
     private void ResetSkill()

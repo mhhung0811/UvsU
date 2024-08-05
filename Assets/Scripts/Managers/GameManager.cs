@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
+    [SerializeField] private AudioConfigs audioConfigs;     
+
     // Start is called before the first frame update
     void Start()
     {
@@ -15,5 +17,10 @@ public class GameManager : Singleton<GameManager>
     void Update()
     {
         
+    }
+
+    public List<AudioConfig> GetAllAudioConfigs()
+    {
+        return audioConfigs._all_audio_configs;
     }
 }
