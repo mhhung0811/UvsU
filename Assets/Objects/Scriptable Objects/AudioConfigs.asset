@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78fdca654f9c68c4481f07991befe90d, type: 3}
+  m_Name: AudioConfigs
+  m_EditorClassIdentifier: 
+  _all_audio_configs:
+  - id: 0
+    name: BGM_1
+    audio_clip: {fileID: 8300000, guid: 17fe8d5b06a9daa41a67391e671fe648, type: 3}
+  - id: 1
+    name: BGM_2
+    audio_clip: {fileID: 8300000, guid: 7f8829db4e598b341bdabece2dd08cf6, type: 3}
+  - id: 2
+    name: BGM_3
+    audio_clip: {fileID: 8300000, guid: 5b75ed1d956af8d468a137151131921a, type: 3}
+  - id: 3
+    name: BulletHit
+    audio_clip: {fileID: 8300000, guid: e8f7571e3693b8c479eb86df80ae5368, type: 3}
+  - id: 4
+    name: Shooting
+    audio_clip: {fileID: 8300000, guid: 7a66bbc546c19af4ba1c9d16ab19267f, type: 3}

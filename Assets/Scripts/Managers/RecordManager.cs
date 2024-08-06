@@ -28,7 +28,7 @@ public class RecordManager : MonoBehaviour
         actions = new List<IAction>();
 
         recordTimes = new List<float>();
-
+            
         keyPos = new Dictionary<KeyCode, int>()
         {
             {recordKeys.moveLeft, 0 },
@@ -42,7 +42,7 @@ public class RecordManager : MonoBehaviour
             {recordKeys.moveRight, false },
             {recordKeys.jump, false },
             {recordKeys.attack, false }
-        };
+        };      
     }
 
     // Update is called once per frame
