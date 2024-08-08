@@ -20,7 +20,7 @@ public class JumpAction : IAction
 
         //    yield return new WaitForEndOfFrame();
         //}
-        actor.GetComponent<PlayerMovement>().HandleJump();
+        //actor.GetComponent<PlayerMovement>().HandleJump();
         Debug.Log("End Jump");
         yield return null;
     }
