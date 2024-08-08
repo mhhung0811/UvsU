@@ -2505,6 +2505,9 @@ MonoBehaviour:
     m_Bits: 8
   _wallCheck: {fileID: 180041794}
   _isGrounded: 0
+  _timer: 0
+  _multi: 0
+  _is_jumping: 0
 --- !u!114 &1205719399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4008,6 +4011,9 @@ MonoBehaviour:
     m_Bits: 8
   _wallCheck: {fileID: 97070833}
   _isGrounded: 0
+  _timer: 0
+  _multi: 50
+  _is_jumping: 0
 --- !u!95 &1767223759
 Animator:
   serializedVersion: 5

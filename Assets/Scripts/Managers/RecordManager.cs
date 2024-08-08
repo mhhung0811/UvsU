@@ -92,11 +92,24 @@ public class RecordManager : MonoBehaviour
                 keyPressed[recordKeys.moveRight] = true;
                 StartCoroutine(EndAction(recordKeys.moveRight, timer, time));
             }
+
+            // Jump 
             if (Input.GetKey(recordKeys.jump) && !keyPressed[recordKeys.jump])
             {
                 keyPressed[recordKeys.jump] = true;
                 StartCoroutine(EndAction(recordKeys.jump, timer, time));
             }
+
+
+            // End Jump
+            if(Input.GetKeyUp(recordKeys.jump) && keyPressed[recordKeys.jump] == true)
+            {
+                keyPressed[recordKeys.jump] = false;
+                StartCoroutine(EndAction(recordKeys.jump, timer, time));
+            }
+
+
+
             if (Input.GetKey(recordKeys.attack) && !keyPressed[recordKeys.attack])
             {
                 keyPressed[recordKeys.attack] = true;  
@@ -146,9 +159,15 @@ public class RecordManager : MonoBehaviour
             keyPos[keycode] = actions.Count;
             actions.Add(action);
         }
-        else if (keycode == recordKeys.jump)
+        else if (keycode == recordKeys.jump && keyPressed[recordKeys.jump] == true)
         {
-            action = new JumpAction(startTime, 0f);
+            action = new StartJumpAction(startTime, 0f);
+            keyPos[keycode] = actions.Count;
+            actions.Add(action);
+        }
+        else if (keycode == recordKeys.jump && keyPressed[recordKeys.jump] == false)
+        {
+            action = new EndJumpAction(startTime, 0f);
             keyPos[keycode] = actions.Count;
             actions.Add(action);
         }
@@ -158,8 +177,7 @@ public class RecordManager : MonoBehaviour
             keyPos[keycode] = actions.Count;
             actions.Add(action);
         }
-        
-        while (Input.GetKey(keycode) && timer < endTime)
+        while (Input.GetKey(keycode) && timer < endTime && keyPressed[recordKeys.jump])
         {
             timer += Time.deltaTime;
             yield return new WaitForEndOfFrame();

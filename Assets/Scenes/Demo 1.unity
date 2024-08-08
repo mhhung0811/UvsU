@@ -31292,6 +31292,7 @@ GameObject:
   - component: {fileID: 781523950}
   - component: {fileID: 781523952}
   - component: {fileID: 781523951}
+  - component: {fileID: 781523953}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -31356,6 +31357,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 781523949}
   m_CullTransparentMesh: 1
+--- !u!95 &781523953
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 781523949}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 077d4c56b5c89d94f977417e619b6b8d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &830687715
 GameObject:
   m_ObjectHideFlags: 0
@@ -47604,13 +47626,16 @@ MonoBehaviour:
   _model: {fileID: 0}
   _rigidBody: {fileID: 0}
   _runVelocity: 7
-  _jumpForce: 50
+  _jumpForce: 100
   _groundCheck: {fileID: 149030120}
   _groundLayer:
     serializedVersion: 2
     m_Bits: 8
   _wallCheck: {fileID: 180041794}
   _isGrounded: 0
+  _timer: 0
+  _multi: 100
+  _is_jumping: 0
 --- !u!114 &1205719399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53304,7 +53329,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1387281782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53374,6 +53399,9 @@ MonoBehaviour:
     m_Bits: 8
   _wallCheck: {fileID: 1734695172}
   _isGrounded: 0
+  _timer: 0
+  _multi: 50
+  _is_jumping: 0
 --- !u!95 &1387281786
 Animator:
   serializedVersion: 5
