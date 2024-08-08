@@ -16,6 +16,10 @@ public class PlayerMovement : MonoBehaviour
     private float _moveDirection;
     [SerializeField] private bool _isGrounded;
 
+    [SerializeField] private float _timer;
+    [SerializeField, Range(50f, 200f)] private float _multi;
+    [SerializeField] private bool _is_jumping;
+
     private void Awake()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
@@ -30,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        _isGrounded =  GroundCheck();
+        _isGrounded = GroundCheck();
         SetYVelocity();
     }
 
@@ -39,6 +43,9 @@ public class PlayerMovement : MonoBehaviour
         _runVelocity = 8f;
         _jumpForce = 30f;
         _moveDirection = 0;
+        _timer = 0;
+        _multi = 115f;
+        _is_jumping = false;
     }
 
     public void HandleMovement(float value)
@@ -47,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
 
         _moveDirection = moveDirectionTemp;
         _model.SetDirection(_moveDirection);
-        
+
 
         Move(moveDirectionTemp);
     }
@@ -66,24 +73,28 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void HandleJump()
+    public void HandleStartJump()
     {
-        
-        if( _isGrounded )
+        _timer += Time.deltaTime;
+        if (_timer >= 0.3f)
         {
-            _animations.SetBoolGround(true);
-            Jump();
+            Jumpping();
         }
-        else
-        {
-            _animations.SetBoolGround(false);
-        }
-        
     }
-
-    private void Jump()
+    public void HandleEndJump()
     {
-        _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpForce);
+        Jumpping();
+        _timer = 0;
+        _is_jumping = false;
+    }
+    public void Jumpping()
+    {
+        if (GroundCheck() && !_is_jumping)
+        {
+            Debug.Log(Mathf.Min(Mathf.Max(_timer, 0.19f), 0.3f));
+            _is_jumping = true;
+            _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, Mathf.Min(Mathf.Max(_timer, 0.19f), 0.3f) * _multi);
+        }
     }
 
     public bool GroundCheck()

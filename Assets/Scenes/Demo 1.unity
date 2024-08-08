@@ -51815,6 +51815,9 @@ MonoBehaviour:
     m_Bits: 8
   _wallCheck: {fileID: 1734695172}
   _isGrounded: 0
+  _timer: 0
+  _multi: 0
+  _is_jumping: 0
 --- !u!95 &1387281786
 Animator:
   serializedVersion: 5
@@ -75142,6 +75145,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 968308911965581609, guid: 0fe5f9535a1a2204395306176ead9a54, type: 3}
+      propertyPath: _gameSceneUIManager
+      value: 
+      objectReference: {fileID: 1126872532}
     - target: {fileID: 3205723477032566177, guid: 0fe5f9535a1a2204395306176ead9a54, type: 3}
       propertyPath: m_Name
       value: Ingame Manager

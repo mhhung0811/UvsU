@@ -15,7 +15,7 @@ public class InputManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -26,7 +26,7 @@ public class InputManager : MonoBehaviour
     public void HandleInput()
     {
         //bool has_click_left = false;
-        //bool has_click_right = false;
+        //bool has_click_right = false; 
         if (Input.GetKeyDown(KeyCode.T))
         {
             StartCoroutine(recordManager.StartRecord(5));
@@ -42,16 +42,21 @@ public class InputManager : MonoBehaviour
             recordManager.RunRecord(recordManager.Records[0], iterator);
         }
 
-        if (Input.GetKeyDown(playerKeys.jump))
+        if (Input.GetKey(playerKeys.jump))
         {
-            player.GetComponent<PlayerMovement>().HandleJump();
+            player.GetComponent<PlayerMovement>().HandleStartJump();
+        }
+
+        if (Input.GetKeyUp(playerKeys.jump))
+        {
+            player.GetComponent<PlayerMovement>().HandleEndJump();
         }
 
         bool moveLeft = Input.GetKey(playerKeys.moveLeft);
         bool moveRight = Input.GetKey(playerKeys.moveRight);
 
-        
-        if( moveLeft ^ moveRight )
+
+        if (moveLeft ^ moveRight)
         {
             // Kiểm tra phím di chuyển trái
             if (moveLeft)
