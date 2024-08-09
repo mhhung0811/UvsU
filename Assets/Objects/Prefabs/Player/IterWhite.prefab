@@ -49,8 +49,8 @@ GameObject:
   - component: {fileID: 3783649114484562804}
   - component: {fileID: 1353381900054912170}
   m_Layer: 6
-  m_Name: Player
-  m_TagString: Untagged
+  m_Name: IterWhite
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -232,6 +232,9 @@ MonoBehaviour:
     m_Bits: 8
   _wallCheck: {fileID: 2189017841793538942}
   _isGrounded: 0
+  _timer: 0
+  _multi: 50
+  _is_jumping: 0
 --- !u!114 &1136670897357877281
 MonoBehaviour:
   m_ObjectHideFlags: 0

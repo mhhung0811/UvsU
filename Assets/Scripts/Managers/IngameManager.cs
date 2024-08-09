@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IngameManager : MonoBehaviour
+public class IngameManager : MonoBehaviour, IHub
 {
     [Header("Timer")]
     [SerializeField] private float _max_time;
@@ -11,6 +11,9 @@ public class IngameManager : MonoBehaviour
     [Header("Iteration")]
     [SerializeField] private int _max_iteration;
     [SerializeField] private int _current_iteration;
+
+    [SerializeField] private LevelConfig _levelConfig;
+    [SerializeField] private List<Peer> _peers;
 
     [SerializeField] private GameSceneUIManager _gameSceneUIManager;
 
@@ -28,6 +31,11 @@ public class IngameManager : MonoBehaviour
         _timer = _max_time;
         _max_iteration = 5;
         _current_iteration = 1;
+
+        foreach (Peer item in _peers)
+        {
+            Register(item);
+        }
     }
     // Update is called once per frame
     void Update()
@@ -70,5 +78,20 @@ public class IngameManager : MonoBehaviour
         _current_iteration--;
         _timer = _max_time;
         ConfigMap();
+    }
+
+    public void SendMessage(string message, Peer sender)
+    {
+        // Resolve message here
+        if (message == "win")
+        {
+            Debug.Log("win");
+        }
+    }
+
+    public void Register(Peer peer)
+    {
+        //_components.Add(component);
+        peer.SetMediator(this);
     }
 }
