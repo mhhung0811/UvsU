@@ -8,7 +8,8 @@ public class GameSceneUIManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _iteration;
     [SerializeField] private TextMeshProUGUI _goal_text;
-
+    [SerializeField] private TextMeshProUGUI _upper_text;
+    [SerializeField] private TextMeshProUGUI _restart_text;
     [SerializeField] private TextMeshProUGUI _count_down_timer;
 
     [SerializeField] private Image _time_slider;
@@ -17,8 +18,11 @@ public class GameSceneUIManager : MonoBehaviour
     [SerializeField] private RectTransform _devil_icon_prefab;
 
     [SerializeField] private GridLayoutGroup _grid_layout_group;
+
+    
     [SerializeField] private List<RectTransform> _list_devils_icon = new List<RectTransform>();
 
+    
     public void SetTimeSlider(float value, float max_timer)
     {
         _time_slider.fillAmount = value / max_timer;
@@ -78,5 +82,11 @@ public class GameSceneUIManager : MonoBehaviour
             arrow_obj.gameObject.SetActive(false);
             _list_devils_icon.Add(image);
         }
+    }
+
+    public void DisableUpperText()
+    {
+        _upper_text.gameObject.SetActive(false);
+        _restart_text.gameObject.SetActive(true);
     }
 }
