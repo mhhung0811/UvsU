@@ -37,7 +37,7 @@ public class IngameManager : MonoBehaviour
     private void CountDownTimer()
     {
         _timer -= Time.deltaTime;
-        _gameSceneUIManager.SetTimerText(_timer);
+        _gameSceneUIManager.SetTimerText(_timer);   
         _gameSceneUIManager.SetTimeSlider(_timer, _max_time);
     }
     public void NextIteration()
