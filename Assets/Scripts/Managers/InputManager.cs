@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
+using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 public class InputManager : MonoBehaviour
 {
@@ -10,12 +11,19 @@ public class InputManager : MonoBehaviour
     [SerializeField] private GameObject iterator;
     [SerializeField] private RecordKeyConfig playerKeys;
 
+    [SerializeField] private IngameManager ingameManager;
+    
     private GameObject actor;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        LoadComponent();
+        
+    }
+    public void LoadComponent()
+    {
+        StartCoroutine(WaitToStartGame());
     }
 
     // Update is called once per frame
@@ -77,15 +85,23 @@ public class InputManager : MonoBehaviour
             player.GetComponent<PlayerAttack>().HandleAttack();
         }
 
+        
 
-        /*if(!has_click_left  &&  !has_click_right) 
+    }
+
+    IEnumerator WaitToStartGame()
+    {
+        while (true)
         {
-            player.GetComponent<PlayerAnimation>().SetBoolRunning(false);
+            if (Input.GetKey(playerKeys.jump) ||
+                Input.GetKey(playerKeys.moveLeft) ||
+                Input.GetKey(playerKeys.moveRight) ||
+                Input.GetKeyDown(playerKeys.attack))
+            {
+                ingameManager.StartIteration();
+                break;
+            }
+            yield return null;
         }
-        bool ground_check = player.GetComponent<PlayerMovement>().GroundCheck();
-        if (ground_check)
-        {
-            player.GetComponent<PlayerAnimation>().SetBoolGround(true);
-        }*/
     }
 }

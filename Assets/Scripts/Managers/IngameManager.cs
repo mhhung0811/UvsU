@@ -17,6 +17,9 @@ public class IngameManager : MonoBehaviour, IHub
 
     [SerializeField] private GameSceneUIManager _gameSceneUIManager;
 
+    private bool is_start_iteration;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +34,7 @@ public class IngameManager : MonoBehaviour, IHub
         _timer = _max_time;
         _max_iteration = 5;
         _current_iteration = 1;
+        is_start_iteration = false; 
 
         foreach (Peer item in _peers)
         {
@@ -40,6 +44,7 @@ public class IngameManager : MonoBehaviour, IHub
     // Update is called once per frame
     void Update()
     {
+
         CountDownTimer();
     }
     private void CountDownTimer()
@@ -93,5 +98,11 @@ public class IngameManager : MonoBehaviour, IHub
     {
         //_components.Add(component);
         peer.SetMediator(this);
+    }
+
+    public void StartIteration()
+    {
+        is_start_iteration = true;
+        _gameSceneUIManager.DisableUpperText();
     }
 }
