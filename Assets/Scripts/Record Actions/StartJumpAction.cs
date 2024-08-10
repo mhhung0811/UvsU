@@ -8,7 +8,7 @@ public class StartJumpAction : IAction
     public float actionTime { get; set; }
     public IEnumerator Execute(GameObject actor)
     {
-        Debug.Log("Start Jump");
+        //Debug.Log("Start Jump");
         float i = 0;
         while (i < actionTime)
         {

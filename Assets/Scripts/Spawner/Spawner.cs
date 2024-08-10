@@ -22,7 +22,7 @@ public class Spawner : MonoBehaviour
     }
     public void HideAllPrefabs()
     {
-        Debug.Log($"{_all_prefabs.transform.childCount}");
+        //Debug.Log($"{_all_prefabs.transform.childCount}");
         foreach (Transform prefab in _all_prefabs)
         {
             _list_prefab.Add(prefab);
@@ -30,7 +30,7 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    public void Spawn(string prefab_name, Vector3 spawn_pos, Vector3 rotation, float _direct)
+    public GameObject Spawn(string prefab_name, Vector3 spawn_pos, Vector3 rotation, float _direct)
     {
         Transform obj = GetObjectFromPool(prefab_name);
 
@@ -41,13 +41,14 @@ public class Spawner : MonoBehaviour
         if(obj == null)
         {
             Debug.Log("Can not find prefab");
-            return;
+            return null;
         }
         obj.gameObject.SetActive(true);
         ConfigPosAndRotation(obj, spawn_pos, rotation, _direct);
         obj.parent = _holder;
-        
 
+        if (obj == null) return null;
+        else return obj.gameObject;
     }
     public Transform GetObjectFromPool(string prefab_name)
     {
@@ -77,7 +78,10 @@ public class Spawner : MonoBehaviour
     {
         obj.position = spawnPos;
 
-        obj.gameObject.GetComponent<BulletMovement>().SetDirection(direct);
+        if (obj.GetComponent<BulletMovement>())
+        {
+            obj.gameObject.GetComponent<BulletMovement>().SetDirection(direct);
+        }
     }
     public void Despawn(Transform obj)
     {

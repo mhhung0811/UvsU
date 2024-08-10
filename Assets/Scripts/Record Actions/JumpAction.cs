@@ -9,7 +9,7 @@ public class JumpAction : IAction
 
     public IEnumerator Execute(GameObject actor)
     {
-        Debug.Log("Start Jump");
+        //Debug.Log("Start Jump");
         float i = 0;
         //while (i < actionTime)
         //{
@@ -21,7 +21,7 @@ public class JumpAction : IAction
         //    yield return new WaitForEndOfFrame();
         //}
         //actor.GetComponent<PlayerMovement>().HandleJump();
-        Debug.Log("End Jump");
+        //Debug.Log("End Jump");
         yield return null;
     }
 

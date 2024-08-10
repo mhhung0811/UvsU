@@ -6,12 +6,10 @@ using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 public class InputManager : MonoBehaviour
 {
-    [SerializeField] private RecordManager recordManager;
-    [SerializeField] private GameObject player;
-    [SerializeField] private GameObject iterator;
-    [SerializeField] private RecordKeyConfig playerKeys;
-
+    //[SerializeField] private RecordManager recordManager;
     [SerializeField] private IngameManager ingameManager;
+    private GameObject player;
+    [SerializeField] private RecordKeyConfig playerKeys;
     
     private GameObject actor;
 
@@ -24,6 +22,7 @@ public class InputManager : MonoBehaviour
     public void LoadComponent()
     {
         StartCoroutine(WaitToStartGame());
+        //GameManager.Instance.Pause();
     }
 
     // Update is called once per frame
@@ -31,13 +30,32 @@ public class InputManager : MonoBehaviour
     {
         HandleInput();
     }
+
+    public void SetPlayer(GameObject player)
+    {
+        this.player = player;
+    }
+
+    public void FreePlayer()
+    {
+        this.player = null;
+    }
+
     public void HandleInput()
     {
-        //bool has_click_left = false;
-        //bool has_click_right = false; 
+        // Pause game
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            GameManager.Instance.Pause();
+        }
+        if (GameManager.Instance.isPauseGame ||
+            GameManager.Instance.isSoftPauseGame) 
+            return;
+
+
         if (Input.GetKeyDown(KeyCode.T))
         {
-            StartCoroutine(recordManager.StartRecord(5));
+            ingameManager.StartIteration();
         }
         //else if (Input.GetKeyDown(KeyCode.Y))
         //{
@@ -46,10 +64,13 @@ public class InputManager : MonoBehaviour
         //}
         if (Input.GetKeyDown(KeyCode.Y))
         {
-            iterator.SetActive(true);
-            recordManager.RunRecord(recordManager.Records[0], iterator);
+            //iterator.SetActive(true);
+            //recordManager.RunRecord(recordManager.Records[0], iterator);
         }
 
+
+        // Player stuff
+        if (player == null) return;
         if (Input.GetKey(playerKeys.jump))
         {
             player.GetComponent<PlayerMovement>().HandleStartJump();
@@ -89,13 +110,15 @@ public class InputManager : MonoBehaviour
 
     }
 
-    IEnumerator WaitToStartGame()
+    public IEnumerator WaitToStartGame()
     {
+        Debug.Log("wait");
+        //yield return new WaitForSeconds(0.5f);
         while (true)
         {
-            if (Input.GetKey(playerKeys.jump) ||
-                Input.GetKey(playerKeys.moveLeft) ||
-                Input.GetKey(playerKeys.moveRight) ||
+            if (Input.GetKeyDown(playerKeys.jump) ||
+                Input.GetKeyDown(playerKeys.moveLeft) ||
+                Input.GetKeyDown(playerKeys.moveRight) ||
                 Input.GetKeyDown(playerKeys.attack))
             {
                 ingameManager.StartIteration();

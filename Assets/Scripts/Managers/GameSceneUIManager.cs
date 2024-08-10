@@ -89,4 +89,10 @@ public class GameSceneUIManager : MonoBehaviour
         _upper_text.gameObject.SetActive(false);
         _restart_text.gameObject.SetActive(true);
     }
+
+    public void EnableUpperText()
+    {
+        _upper_text.gameObject.SetActive(true);
+        _restart_text.gameObject.SetActive(false);
+    }
 }
