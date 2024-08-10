@@ -25,11 +25,11 @@ public class Gate : Peer
     {
         if (collision != null)
         { 
-            Debug.Log(collision.gameObject.name);
+            //Debug.Log(collision.gameObject.name);
         }
         if (collision.CompareTag("Player"))
         {
-            Send("win");
+            Send(IngameMessage.Complete.ToString());
         }
     }
 }
