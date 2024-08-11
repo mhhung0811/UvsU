@@ -71,7 +71,7 @@ public class InputManager : MonoBehaviour
 
         // Player stuff
         if (player == null) return;
-        if (Input.GetKey(playerKeys.jump))
+        if (Input.GetKeyDown(playerKeys.jump))
         {
             player.GetComponent<PlayerMovement>().HandleStartJump();
         }

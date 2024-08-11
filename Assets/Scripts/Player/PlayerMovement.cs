@@ -20,6 +20,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField, Range(50f, 200f)] private float _multi;
     [SerializeField] private bool _is_jumping;
 
+    // jump stuff
+    private float jumpMaxTime = 0.175f;
+    private float jumpMinTime = 0.03f;
+    private float jumpTimer = 0f;
+
+
     private void Awake()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
@@ -36,12 +42,19 @@ public class PlayerMovement : MonoBehaviour
     {
         _isGrounded = GroundCheck();
         SetYVelocity();
+
+        if (_is_jumping)
+        {
+            jumpTimer += Time.deltaTime;
+        }
+
+        Jumpping();
     }
 
     private void Initialize()
     {
         _runVelocity = 8f;
-        _jumpForce = 30f;
+        _jumpForce = 20f;
         _moveDirection = 0;
         _timer = 0;
         _multi = 115f;
@@ -75,26 +88,54 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandleStartJump()
     {
-        _timer += Time.deltaTime;
-        if (_timer >= 0.3f)
+        // Initial jump
+        if (GroundCheck() && !_is_jumping)
         {
-            Jumpping();
+            //Debug.Log(Mathf.Min(Mathf.Max(_timer, 0.19f), 0.3f));
+            jumpTimer = 0;
+            _is_jumping = true;
+            //_rigidBody.velocity = new Vector2(_rigidBody.velocity.x, Mathf.Min(Mathf.Max(_timer, 0.19f), 0.3f) * _multi);
+            _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpForce);
+
+            //Debug.Log(transform.position.y);
+            //Debug.Log(jumpFixedY + jumpMaxY);
         }
+        //_timer += Time.deltaTime;
+        //if (_timer >= 0.3f)
+        //{
+        //    Jumpping();
+        //}
     }
     public void HandleEndJump()
     {
-        Jumpping();
-        _timer = 0;
+        //Jumpping();
+        //_timer = 0;
         _is_jumping = false;
     }
     public void Jumpping()
     {
-        if (GroundCheck() && !_is_jumping)
+        // Jump float
+        if (!GroundCheck() && _is_jumping && jumpTimer < jumpMinTime)
         {
-            Debug.Log(Mathf.Min(Mathf.Max(_timer, 0.19f), 0.3f));
-            _is_jumping = true;
-            _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, Mathf.Min(Mathf.Max(_timer, 0.19f), 0.3f) * _multi);
+            _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpForce);
         }
+        if (!GroundCheck() && _is_jumping)
+        {
+            if (jumpTimer < jumpMaxTime)
+                _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpForce);
+            else
+                _is_jumping = false;
+        }
+
+        // Jump drop
+        //if (GroundCheck() && _is_jumping)
+        //{
+        //    _is_jumping = false;
+        //}
+        //if (transform.position.y > jumpFixedY + jumpMaxY)
+        //{
+        //    _is_jumping = false;
+        //}
     }
 
     public bool GroundCheck()

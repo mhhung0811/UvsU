@@ -125,7 +125,9 @@ public class IngameManager : MonoBehaviour, IHub
     }
 
     public void StartIteration()
-    {                
+    {
+        Debug.Log(_whiteRecords.Count);
+        Debug.Log(_blackRecords.Count);
         // Even is white
         if (_current_iteration % 2 == 0)
         {
@@ -168,8 +170,8 @@ public class IngameManager : MonoBehaviour, IHub
     {
         if (_iterators.Count >= _current_iterator)
         {
-            Debug.Log(_iterators.Count);
-            Debug.Log(_iterators[_current_iterator]);
+            //Debug.Log(_iterators.Count);
+            //Debug.Log(_iterators[_current_iterator]);
             return _iterators[_current_iterator];
         }
         else

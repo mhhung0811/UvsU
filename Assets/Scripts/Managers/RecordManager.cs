@@ -62,25 +62,30 @@ public class RecordManager : MonoBehaviour
             }
             if (Input.GetKey(recordKeys.moveRight) && !keyPressed[recordKeys.moveRight])
             {
-                //Debug.Log("Running");
+                //Debug.Log("record move right");
                 keyPressed[recordKeys.moveRight] = true;
                 StartCoroutine(EndAction(recordKeys.moveRight, timer, time));
             }
-
-            // Jump 
             if (Input.GetKey(recordKeys.jump) && !keyPressed[recordKeys.jump])
             {
                 keyPressed[recordKeys.jump] = true;
                 StartCoroutine(EndAction(recordKeys.jump, timer, time));
             }
 
+            //// Jump 
+            //if (Input.GetKey(recordKeys.jump) && !keyPressed[recordKeys.jump])
+            //{
+            //    keyPressed[recordKeys.jump] = true;
+            //    StartCoroutine(EndAction(recordKeys.jump, timer, time));
+            //}
 
-            // End Jump
-            if (Input.GetKeyUp(recordKeys.jump) && keyPressed[recordKeys.jump] == true)
-            {
-                keyPressed[recordKeys.jump] = false;
-                StartCoroutine(EndAction(recordKeys.jump, timer, time));
-            }
+
+            //// End Jump
+            //if (Input.GetKeyUp(recordKeys.jump) && keyPressed[recordKeys.jump] == true)
+            //{
+            //    keyPressed[recordKeys.jump] = false;
+            //    StartCoroutine(EndAction(recordKeys.jump, timer, time));
+            //}
 
 
 
@@ -134,25 +139,31 @@ public class RecordManager : MonoBehaviour
             keyPos[keycode] = actions.Count;
             actions.Add(action);
         }
-        else if (keycode == recordKeys.jump && keyPressed[recordKeys.jump] == true)
+        else if (keycode == recordKeys.jump)
         {
-            action = new StartJumpAction(startTime, 0f);
+            action = new JumpAction(startTime, 0f);
             keyPos[keycode] = actions.Count;
             actions.Add(action);
         }
-        else if (keycode == recordKeys.jump && keyPressed[recordKeys.jump] == false)
-        {
-            action = new EndJumpAction(startTime, 0f);
-            keyPos[keycode] = actions.Count;
-            actions.Add(action);
-        }
+        //else if (keycode == recordKeys.jump && keyPressed[recordKeys.jump] == true)
+        //{
+        //    action = new StartJumpAction(startTime, 0f);
+        //    keyPos[keycode] = actions.Count;
+        //    actions.Add(action);
+        //}
+        //else if (keycode == recordKeys.jump && keyPressed[recordKeys.jump] == false)
+        //{
+        //    action = new EndJumpAction(startTime, 0f);
+        //    keyPos[keycode] = actions.Count;
+        //    actions.Add(action);
+        //}
         else if (keycode == recordKeys.attack)
         {
             action = new AttackAction(startTime, 0f);
             keyPos[keycode] = actions.Count;
             actions.Add(action);
         }
-        while (Input.GetKey(keycode) && timer < endTime && keyPressed[recordKeys.jump] && !isStop)
+        while (Input.GetKey(keycode) && timer < endTime && !isStop)
         {
             timer += Time.deltaTime;
             yield return new WaitForEndOfFrame();
