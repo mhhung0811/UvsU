@@ -122,7 +122,7 @@ public class InputManager : MonoBehaviour
                 Input.GetKeyDown(playerKeys.attack))
             {
                 ingameManager.StartIteration();
-                break;
+                yield break;
             }
             yield return null;
         }

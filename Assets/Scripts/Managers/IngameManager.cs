@@ -29,16 +29,18 @@ public class IngameManager : MonoBehaviour, IHub
     {
         LoadComponent();
         PrepareIteration();
-        _gameSceneUIManager.InitiateIconIter(_max_iteration);
         AudioManager.Instance.PlayBGM(0);
     }
 
     private void LoadComponent()
     {
-        _current_iteration = -1;
+        _current_iteration = 0;
         _current_iterator = -1;
         _max_iteration = _levelConfig.iterTimes.Count;
         _max_iterator = _levelConfig.iterPositions.Count;
+
+        //Initiate list icon iteration
+        _gameSceneUIManager.InitiateIconIter(_max_iteration);
 
         _recordManager = GetComponent<RecordManager>();
         _iterators = new List<GameObject>();
@@ -67,7 +69,10 @@ public class IngameManager : MonoBehaviour, IHub
 
     public void PrepareIteration()
     {
-        _current_iteration++;
+        //Set iter text UI
+        _gameSceneUIManager.SetIterText(_current_iteration + 1, _max_iteration);
+        _gameSceneUIManager.SetIconIter(_current_iteration + 1);
+
         _current_iterator = (_current_iteration % 2 == 0) ? 0 : (_current_iteration + 1) / 2;
 
         // Clear old iterator
@@ -118,16 +123,16 @@ public class IngameManager : MonoBehaviour, IHub
 
     public void BackToPreviousIteration()
     {
-        _current_iteration -= 2;
+        _current_iteration -= 1;
         _current_iterator = (_current_iteration % 2 == 0) ? 0 : (_current_iteration + 1) / 2;
-
         PrepareIteration();
     }
 
     public void StartIteration()
     {
-        Debug.Log(_whiteRecords.Count);
-        Debug.Log(_blackRecords.Count);
+        // Debug.Log(_whiteRecords.Count);
+        // Debug.Log(_blackRecords.Count);
+        Debug.Log("Start Iteration");
         // Even is white
         if (_current_iteration % 2 == 0)
         {
@@ -159,6 +164,7 @@ public class IngameManager : MonoBehaviour, IHub
 
     public void EndIteration()
     {
+        _current_iteration++;
         _inputManager.FreePlayer();
         _recordManager.isStop = true;
         PrepareIteration();
@@ -186,8 +192,17 @@ public class IngameManager : MonoBehaviour, IHub
         // Resolve message here
         if (message == IngameMessage.Complete.ToString())
         {
-            Debug.Log("Complete");
-            EndIteration();
+            //Iter white in even iteration reachs gate
+            if (_current_iteration % 2 == 0)
+            {
+                Debug.Log("Complete");
+                EndIteration();
+            }
+            //Iter white in odd iteration reachs gate
+            else
+            {
+                IterationFailure();
+            }
         }
     }
 
@@ -195,5 +210,12 @@ public class IngameManager : MonoBehaviour, IHub
     {
         //_components.Add(component);
         peer.SetMediator(this);
+    }
+    IEnumerator IterationFailure()
+    {
+        _gameSceneUIManager.EnableFailedText();
+        yield return new WaitForSeconds(0.5f);
+        PrepareIteration();
+        yield return null;
     }
 }
