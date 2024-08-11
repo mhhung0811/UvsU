@@ -113,13 +113,15 @@ public class RecordManager : MonoBehaviour
         actions.Clear();
     }
 
-    public void RunRecord(List<IAction> listAction, GameObject actor)
+    public Coroutine RunRecord(List<IAction> listAction, GameObject actor)
     {
         Debug.Log(listAction.Count);
         if (listAction.Count > 0)
         {
-            StartCoroutine(Run(listAction, actor));
+            Coroutine record =  StartCoroutine(Run(listAction, actor));
+            return record;
         }
+        return null;
     }
 
     IEnumerator StartAction(KeyCode keycode, float startTime, float endTime, Action<float> callback)
