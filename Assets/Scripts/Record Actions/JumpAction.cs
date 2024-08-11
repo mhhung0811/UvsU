@@ -9,18 +9,18 @@ public class JumpAction : IAction
 
     public IEnumerator Execute(GameObject actor)
     {
-        Debug.Log("Start Jump");
+        //Debug.Log("Start Jump");
         float i = 0;
-        //while (i < actionTime)
-        //{
-        //    i += Time.deltaTime;
+        while (i < actionTime)
+        {
+            i += Time.deltaTime;
 
-        //    //Debug.Log("Running Left");
-        //    obj.GetComponent<PlayerMovement>().HandleJump();
+            //Debug.Log("Running Left");
+            actor.GetComponent<PlayerMovement>().HandleStartJump();
 
-        //    yield return new WaitForEndOfFrame();
-        //}
-        //actor.GetComponent<PlayerMovement>().HandleJump();
+            yield return new WaitForEndOfFrame();
+        }
+        actor.GetComponent<PlayerMovement>().HandleEndJump();
         Debug.Log("End Jump");
         yield return null;
     }

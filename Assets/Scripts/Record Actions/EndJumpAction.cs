@@ -9,7 +9,7 @@ public class EndJumpAction : IAction
 
     public IEnumerator Execute(GameObject actor)
     {
-        Debug.Log("End Jump");
+        //Debug.Log("End Jump");
 
         actor.GetComponent<PlayerMovement>().HandleEndJump();
         yield return null;

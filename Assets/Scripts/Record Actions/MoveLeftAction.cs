@@ -9,7 +9,7 @@ public class MoveLeftAction : IAction
 
     public IEnumerator Execute(GameObject actor)
     {
-        Debug.Log("Start Left");
+        //Debug.Log("Start Left");
         float i = 0;
         while (i < actionTime)
         {
@@ -32,7 +32,7 @@ public class MoveLeftAction : IAction
 
             yield return new WaitForEndOfFrame();
         }
-        Debug.Log("End Left");
+        //Debug.Log("End Left");
         yield return null;
     }
 

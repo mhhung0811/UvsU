@@ -9,22 +9,19 @@ public class RecordManager : MonoBehaviour
 
     private Dictionary<KeyCode, int> keyPos;
     private Dictionary<KeyCode, bool> keyPressed;
-    // public List<IAction> actions { get; private set; }
-    //private float timer;
-    //private bool isRecord;
 
-    public List<List<IAction>> Records { get; private set; }
+    //public List<List<IAction>> Records { get; private set; }
     private List<float> recordTimes;
     private List<IAction> actions;
+    public bool isStop { private get; set; }
 
 
     // Start is called before the first frame update
     void Start()
     {
-        //timer = 0;
-        //isRecord = false;
+        //Records = new List<List<IAction>>();
+        isStop = false;
 
-        Records = new List<List<IAction>>();
         actions = new List<IAction>();
 
         recordTimes = new List<float>();
@@ -45,40 +42,17 @@ public class RecordManager : MonoBehaviour
         };
     }
 
-    // Update is called once per frame
-    void Update()
+    public IEnumerator StartRecord(float time, List<List<IAction>> records)
     {
-        //if (!isRecord) return;
+        isStop = false;
 
-        //timer += Time.deltaTime;
-
-        //if (Input.GetKeyDown(recordKeys.moveLeft))
-        //{
-        //    StartCoroutine(EndAction(recordOrder, recordKeys.moveLeft, timer));
-        //}
-        //if (Input.GetKeyDown(recordKeys.moveRight))
-        //{
-        //    StartCoroutine(EndAction(recordOrder, recordKeys.moveRight, timer));
-        //}
-        //if (Input.GetKeyDown(recordKeys.jump))
-        //{
-        //    StartCoroutine(EndAction(recordOrder, recordKeys.jump, timer));
-        //}
-        //if (Input.GetKeyDown(recordKeys.attack))
-        //{
-        //    StartCoroutine(EndAction(recordOrder, recordKeys.attack, timer));
-        //}
-    }
-
-    public IEnumerator StartRecord(float time)
-    {
         float timer = 0;
 
         Debug.Log("Start Record");
         recordTimes.Add(time);
 
         //Debug.Log(recordTimes.Count);
-        while (timer < time)
+        while (timer < time && !isStop)
         {
             //Debug.Log(timer);
             if (Input.GetKey(recordKeys.moveLeft) && !keyPressed[recordKeys.moveLeft])
@@ -88,25 +62,30 @@ public class RecordManager : MonoBehaviour
             }
             if (Input.GetKey(recordKeys.moveRight) && !keyPressed[recordKeys.moveRight])
             {
-                Debug.Log("Running");
+                //Debug.Log("record move right");
                 keyPressed[recordKeys.moveRight] = true;
                 StartCoroutine(EndAction(recordKeys.moveRight, timer, time));
             }
-
-            // Jump 
             if (Input.GetKey(recordKeys.jump) && !keyPressed[recordKeys.jump])
             {
                 keyPressed[recordKeys.jump] = true;
                 StartCoroutine(EndAction(recordKeys.jump, timer, time));
             }
 
+            //// Jump 
+            //if (Input.GetKey(recordKeys.jump) && !keyPressed[recordKeys.jump])
+            //{
+            //    keyPressed[recordKeys.jump] = true;
+            //    StartCoroutine(EndAction(recordKeys.jump, timer, time));
+            //}
 
-            // End Jump
-            if (Input.GetKeyUp(recordKeys.jump) && keyPressed[recordKeys.jump] == true)
-            {
-                keyPressed[recordKeys.jump] = false;
-                StartCoroutine(EndAction(recordKeys.jump, timer, time));
-            }
+
+            //// End Jump
+            //if (Input.GetKeyUp(recordKeys.jump) && keyPressed[recordKeys.jump] == true)
+            //{
+            //    keyPressed[recordKeys.jump] = false;
+            //    StartCoroutine(EndAction(recordKeys.jump, timer, time));
+            //}
 
 
 
@@ -122,14 +101,15 @@ public class RecordManager : MonoBehaviour
         // error occur when hold key out of end time
         // hot fix, might need improve
         yield return new WaitForSeconds(0.5f);
-        EndRecord();
+        EndRecord(records);
 
         Debug.Log("End Record");
     }
 
-    public void EndRecord()
+    public void EndRecord(List<List<IAction>> records)
     {
-        Records.Add(new List<IAction>(actions));
+        records.Add(new List<IAction>(actions));
+        //Records.Add(new List<IAction>(actions));
         actions.Clear();
     }
 
@@ -146,7 +126,7 @@ public class RecordManager : MonoBehaviour
     {
         IAction action;
         float timer = 0f;
-        Debug.Log("Recording");
+        //Debug.Log("Recording");
         if (keycode == recordKeys.moveLeft)
         {
             action = new MoveLeftAction(startTime, 0f);
@@ -159,25 +139,31 @@ public class RecordManager : MonoBehaviour
             keyPos[keycode] = actions.Count;
             actions.Add(action);
         }
-        else if (keycode == recordKeys.jump && keyPressed[recordKeys.jump] == true)
+        else if (keycode == recordKeys.jump)
         {
-            action = new StartJumpAction(startTime, 0f);
+            action = new JumpAction(startTime, 0f);
             keyPos[keycode] = actions.Count;
             actions.Add(action);
         }
-        else if (keycode == recordKeys.jump && keyPressed[recordKeys.jump] == false)
-        {
-            action = new EndJumpAction(startTime, 0f);
-            keyPos[keycode] = actions.Count;
-            actions.Add(action);
-        }
+        //else if (keycode == recordKeys.jump && keyPressed[recordKeys.jump] == true)
+        //{
+        //    action = new StartJumpAction(startTime, 0f);
+        //    keyPos[keycode] = actions.Count;
+        //    actions.Add(action);
+        //}
+        //else if (keycode == recordKeys.jump && keyPressed[recordKeys.jump] == false)
+        //{
+        //    action = new EndJumpAction(startTime, 0f);
+        //    keyPos[keycode] = actions.Count;
+        //    actions.Add(action);
+        //}
         else if (keycode == recordKeys.attack)
         {
             action = new AttackAction(startTime, 0f);
             keyPos[keycode] = actions.Count;
             actions.Add(action);
         }
-        while (Input.GetKey(keycode) && timer < endTime && keyPressed[recordKeys.jump])
+        while (Input.GetKey(keycode) && timer < endTime && !isStop)
         {
             timer += Time.deltaTime;
             yield return new WaitForEndOfFrame();
@@ -198,7 +184,7 @@ public class RecordManager : MonoBehaviour
             actions[keyPos[keycode]].actionTime = timer;
             keyPressed[keycode] = false;
         }
-        Debug.Log("End action");
+        //Debug.Log("End action");
     }
 
     IEnumerator Run(List<IAction> actions, GameObject actor)
