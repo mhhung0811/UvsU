@@ -235,8 +235,16 @@ public class IngameManager : MonoBehaviour, IHub
         StopAnyLogicCoroutine();
 
         _current_iteration++;
-        PrepareIteration();
-        StartCoroutine(_inputManager.WaitToStartGame());
+        if (_current_iteration == _max_iteration)
+        {
+            _gameSceneUIManager.LevelCompleted();
+            _inputManager.WaitToReturnHub();
+        }
+        else
+        {
+            PrepareIteration();
+            StartCoroutine(_inputManager.WaitToStartGame());
+        }
     }
 
     public GameObject GetCurrentPlayer()

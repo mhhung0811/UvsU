@@ -5,6 +5,11 @@ using UnityEngine;
 public class AudioManager : Singleton<AudioManager>
 {
     [SerializeField] private AudioSource audioSourceBGM;
+    public AudioSource AudioSourceBGM
+    {
+        get { return audioSourceBGM; }
+        set { audioSourceBGM = value; }
+    }
     [SerializeField] private AudioSource audioSourceFX;
 
     [SerializeField] private List<AudioConfig> list_audio_configs;

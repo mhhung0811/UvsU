@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 public class InputManager : MonoBehaviour
@@ -126,5 +127,25 @@ public class InputManager : MonoBehaviour
             }
             yield return null;
         }
+    }
+    public void WaitToReturnHub()
+    {
+        StartCoroutine(WaitToReturnHubCoroutine());
+    }
+    public IEnumerator WaitToReturnHubCoroutine()
+    {
+        Debug.Log("Press X to return Hub");
+        while (true)
+        {
+            if(Input.GetKeyDown(KeyCode.X))
+            {
+                Debug.Log("X pressed");
+                AudioManager.Instance.AudioSourceBGM.Stop();
+                SceneManager.LoadSceneAsync("Main Menu");   
+                yield break;
+            }
+            yield return null;
+        }
+        
     }
 }

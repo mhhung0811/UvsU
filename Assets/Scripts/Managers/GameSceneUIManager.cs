@@ -13,6 +13,8 @@ public class GameSceneUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _count_down_timer;
     [SerializeField] private GameObject _failure_text;
     [SerializeField] private GameObject _win_text;
+    [SerializeField] private Image _all_ui_panel;
+    [SerializeField] private TextMeshProUGUI _lower_text;
 
     [SerializeField] private Image _time_slider;
 
@@ -114,5 +116,11 @@ public class GameSceneUIManager : MonoBehaviour
     public void DisableWinText()
     {
         _win_text.gameObject.SetActive(false);
+    }
+    public void LevelCompleted()
+    {
+        _all_ui_panel.gameObject.SetActive(false);
+        _win_text.gameObject.SetActive(true);
+        _lower_text.gameObject.SetActive(true);
     }
 }
