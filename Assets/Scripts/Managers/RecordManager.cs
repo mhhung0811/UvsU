@@ -13,14 +13,14 @@ public class RecordManager : MonoBehaviour
     //public List<List<IAction>> Records { get; private set; }
     private List<float> recordTimes;
     private List<IAction> actions;
-    public bool isStop { private get; set; }
+    public bool isStopRecording { private get; set; }
 
 
     // Start is called before the first frame update
     void Start()
     {
         //Records = new List<List<IAction>>();
-        isStop = false;
+        isStopRecording = false;
 
         actions = new List<IAction>();
 
@@ -44,7 +44,7 @@ public class RecordManager : MonoBehaviour
 
     public IEnumerator StartRecord(float time, List<List<IAction>> records)
     {
-        isStop = false;
+        isStopRecording = false;
 
         float timer = 0;
 
@@ -52,7 +52,7 @@ public class RecordManager : MonoBehaviour
         recordTimes.Add(time);
 
         //Debug.Log(recordTimes.Count);
-        while (timer < time && !isStop)
+        while (timer < time && !isStopRecording)
         {
             //Debug.Log(timer);
             if (Input.GetKey(recordKeys.moveLeft) && !keyPressed[recordKeys.moveLeft])
@@ -113,17 +113,6 @@ public class RecordManager : MonoBehaviour
         actions.Clear();
     }
 
-    public Coroutine RunRecord(List<IAction> listAction, GameObject actor)
-    {
-        Debug.Log(listAction.Count);
-        if (listAction.Count > 0)
-        {
-            Coroutine record =  StartCoroutine(Run(listAction, actor));
-            return record;
-        }
-        return null;
-    }
-
     IEnumerator StartAction(KeyCode keycode, float startTime, float endTime, Action<float> callback)
     {
         IAction action;
@@ -165,7 +154,7 @@ public class RecordManager : MonoBehaviour
             keyPos[keycode] = actions.Count;
             actions.Add(action);
         }
-        while (Input.GetKey(keycode) && timer < endTime && !isStop)
+        while (Input.GetKey(keycode) && timer < endTime && !isStopRecording)
         {
             timer += Time.deltaTime;
             yield return new WaitForEndOfFrame();
@@ -189,19 +178,24 @@ public class RecordManager : MonoBehaviour
         //Debug.Log("End action");
     }
 
-    IEnumerator Run(List<IAction> actions, GameObject actor)
+    IEnumerator Run(List<IAction> actions, GameObject actor, Action<Coroutine> callback)
     {
         Debug.Log("Run");
 
         float timer = 0;
         int i = 0;
+        Coroutine actionCoroutine = null;
 
         while (i < actions.Count)
         {
             timer += Time.deltaTime;
             if (timer >= actions[i].startTime)
             {
-                StartCoroutine(actions[i].Execute(actor));
+                actionCoroutine = StartCoroutine(actions[i].Execute(actor));
+                if (actionCoroutine != null)
+                {
+                    callback(actionCoroutine);
+                }
                 i++;
             }
             yield return new WaitForEndOfFrame();
@@ -214,5 +208,17 @@ public class RecordManager : MonoBehaviour
         //    yield return new WaitForSeconds(action.startTime);
         //    StartCoroutine(action.Execute());
         //}
+    }
+
+    public List<Coroutine> RunRecord(List<IAction> listAction, GameObject actor)
+    {
+        //Debug.Log(listAction.Count);
+        List<Coroutine> listCoroutines = new List<Coroutine>();
+        if (listAction.Count > 0)
+        {
+            Coroutine record = StartCoroutine(Run(listAction, actor, res => { listCoroutines.Add(res); }));
+            listCoroutines.Add(record);
+        }
+        return listCoroutines;
     }
 }

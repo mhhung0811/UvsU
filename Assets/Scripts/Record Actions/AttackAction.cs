@@ -10,7 +10,7 @@ public class AttackAction : IAction
     public IEnumerator Execute(GameObject actor)
     {
         //Debug.Log("Start Attack");
-        float i = 0;
+        //float i = 0;
         //while (i < actionTime)
         //{
         //    i += Time.deltaTime;
@@ -20,7 +20,9 @@ public class AttackAction : IAction
 
         //    yield return new WaitForEndOfFrame();
         //}
+        
         actor.GetComponent<PlayerAttack>().HandleAttack();
+        
         //Debug.Log("End Attack");
         yield return null;
     }

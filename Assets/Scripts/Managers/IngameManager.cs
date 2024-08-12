@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -24,8 +26,9 @@ public class IngameManager : MonoBehaviour, IHub
     private List<List<IAction>> _whiteRecords;
     private List<List<IAction>> _blackRecords;
 
-    private Coroutine _white_record;
-    private List<Coroutine> _black_records;
+    //private Coroutine _white_record;
+    //private List<Coroutine> _black_records;
+    private List<Coroutine> _coroutines;
 
     private Coroutine _timer_coroutine;
 
@@ -51,6 +54,7 @@ public class IngameManager : MonoBehaviour, IHub
         _iterators = new List<GameObject>();
         _whiteRecords = new List<List<IAction>>();
         _blackRecords = new List<List<IAction>>();
+        _coroutines = new List<Coroutine>();
 
         foreach (Peer item in _peers)
         {
@@ -150,30 +154,40 @@ public class IngameManager : MonoBehaviour, IHub
     }
     private void StopAnyLogicCoroutine()
     {
+        // Still bugging, can't fix & won't fix
+        // Clear coroutines
+        foreach (Coroutine record in _coroutines)
+        {
+            if (record != null)
+                StopCoroutine(record);
+        }
+        _coroutines.Clear();
+
         // End timer
         StopCoroutine(_timer_coroutine);
         //End record 
-        _recordManager.isStop = true;
+        _recordManager.isStopRecording = true;
         // Disable keyboard
         _inputManager.FreePlayer();
+        GameManager.Instance.SoftPause();
 
-        if(_white_record !=  null)
-        {
-            StopCoroutine(_white_record);
-        }
-        if(_black_records != null)
-        {
-            foreach (Coroutine record in _black_records)
-            {
-                StopCoroutine(record);
-            }
-            _black_records.Clear();
-        }
-        
-        
+        //if (_white_record != null)
+        //{
+        //    StopCoroutine(_white_record);
+        //}
+        //if (_black_records != null)
+        //{
+        //    foreach (Coroutine record in _black_records)
+        //    {
+        //        StopCoroutine(record);
+        //    }
+        //    _black_records.Clear();
+        //}
     }
     public void StartIteration()
     {
+        GameManager.Instance.SoftContinue();
+
         // Debug.Log(_whiteRecords.Count);
         // Debug.Log(_blackRecords.Count);
         Debug.Log("Start Iteration");
@@ -187,8 +201,11 @@ public class IngameManager : MonoBehaviour, IHub
             // Run record if has
             for (int i = 0; i < _blackRecords.Count; i++)
             {
-                Coroutine record =  _recordManager.RunRecord(_blackRecords[i], _iterators[i + 1]);
-                _black_records.Add(record);
+                List<Coroutine> records =  _recordManager.RunRecord(_blackRecords[i], _iterators[i + 1]);
+                //_black_records.Add(record);
+                //_coroutines.Add(record);
+                _coroutines = _coroutines.Concat(records).ToList();
+                
             }
         }
         // Odd is black
@@ -198,11 +215,14 @@ public class IngameManager : MonoBehaviour, IHub
             StartCoroutine(_recordManager.StartRecord(_max_time, _blackRecords));
 
             // Run record if has
-            _white_record =  _recordManager.RunRecord(_whiteRecords[0], _iterators[0]);
+            //_white_record =  _recordManager.RunRecord(_whiteRecords[0], _iterators[0]);
+            List<Coroutine> records = _recordManager.RunRecord(_whiteRecords[0], _iterators[0]);
+            _coroutines = _coroutines.Concat(records).ToList();
             for (int i = 0; i < _blackRecords.Count - 1; i++)
             {
-                Coroutine record = _recordManager.RunRecord(_blackRecords[i], _iterators[i + 1]);
-                _black_records.Add(record);
+                List<Coroutine> records1 = _recordManager.RunRecord(_blackRecords[i], _iterators[i + 1]);
+                //_black_records.Add(record);
+                _coroutines = _coroutines.Concat(records1).ToList();
             }
         }
 
