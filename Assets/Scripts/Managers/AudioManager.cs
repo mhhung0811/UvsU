@@ -11,6 +11,11 @@ public class AudioManager : Singleton<AudioManager>
         set { audioSourceBGM = value; }
     }
     [SerializeField] private AudioSource audioSourceFX;
+    public AudioSource AudioSourceFX
+    {
+        get { return AudioSourceFX; }
+        set { audioSourceFX = value; }
+    }
 
     [SerializeField] private List<AudioConfig> list_audio_configs;
     

@@ -71,7 +71,7 @@ public class PlayerMovement : MonoBehaviour
 
         Move(moveDirectionTemp);
     }
-
+    
     private void Move(float direction)
     {
         if ((_rigidBody.velocity.x * direction) < 0 || WallCheck())
@@ -84,6 +84,11 @@ public class PlayerMovement : MonoBehaviour
             _rigidBody.velocity = new Vector2(_runVelocity * direction, _rigidBody.velocity.y);
             _animations.SetBoolRunning(true);
         }
+    }
+
+    public void HandleMoveLeftAndRight()
+    {
+        _animations.SetBoolRunning(false);
     }
 
     public void HandleStartJump()

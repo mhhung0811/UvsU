@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class IngameManager : MonoBehaviour, IHub
 {
@@ -264,21 +265,24 @@ public class IngameManager : MonoBehaviour, IHub
         }
     }
 
-    public void SendMessage(string message, Peer sender)
+    public void SendMessage(string message, Peer sender, GameObject obj)
     {
         // Resolve message here
         if (message == IngameMessage.Complete.ToString())
         {
-            //Iter white in even iteration reachs gate
-            if (_current_iteration % 2 == 0)
+            if(obj == _iterators[0])
             {
-                Debug.Log("Complete");
-                EndIteration();
-            }
-            //Iter white in odd iteration reachs gate
-            else
-            {
-                RestartIteration();
+                IterSpawner.Instance.Despawn(obj.transform);
+                if (_current_iteration % 2 == 0)
+                {
+                    Debug.Log("Complete");
+                    EndIteration();
+                }
+                //Iter white in odd iteration reachs gate
+                else
+                {
+                    RestartIteration();
+                }
             }
         }
     }
@@ -302,6 +306,12 @@ public class IngameManager : MonoBehaviour, IHub
     {
         StartCoroutine(IterationFailure());
     }
+    public void RedoIteration()
+    {
+        StopAnyLogicCoroutine();
+        PrepareIteration();
+        StartCoroutine(_inputManager.WaitToStartGame());
+    }
     public void CheckBulletTrigger(GameObject obj)
     {
         if(obj == _iterators[_current_iterator])
@@ -314,5 +324,13 @@ public class IngameManager : MonoBehaviour, IHub
             _whiteRecords.Clear();
             Debug.Log("End iteration by shooting");
         }
+    }
+    public void RestartLevel()
+    {
+        StopAnyLogicCoroutine();
+        _current_iteration = 0;
+        PrepareIteration();
+        StartCoroutine(_inputManager.WaitToStartGame());
+
     }
 }

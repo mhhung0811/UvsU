@@ -11,9 +11,9 @@ public abstract class Peer : MonoBehaviour
         _hub = hub;
     }
 
-    public void Send(string message)
+    public void Send(string message, GameObject obj)
     {
-        _hub.SendMessage(message, this);
+        _hub.SendMessage(message, this, obj);
     }
 
     public abstract void Receive(string message);
