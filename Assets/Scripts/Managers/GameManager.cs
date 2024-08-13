@@ -9,6 +9,14 @@ public class GameManager : Singleton<GameManager>
     public bool isPauseGame { get; private set; }
     public bool isSoftPauseGame { get; private set; }
 
+    private int _current_level = 1;
+
+    public int Current_level
+    {
+        get { return _current_level; }
+        set { _current_level = value; }
+    }
+
     // Start is called before the first frame update
     void Start()
     {

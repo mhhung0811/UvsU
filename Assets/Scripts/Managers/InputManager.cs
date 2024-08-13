@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static System.Runtime.CompilerServices.RuntimeHelpers;
+using static UnityEngine.Rendering.DebugUI;
 
 public class InputManager : MonoBehaviour
 {
     //[SerializeField] private RecordManager recordManager;
     [SerializeField] private IngameManager ingameManager;
+    [SerializeField] private GameSceneUIManager gameSceneUIManager;
     private GameObject player;
     [SerializeField] private RecordKeyConfig playerKeys;
-    
+    [SerializeField] private InputRouter _inputRouter;
+
     private GameObject actor;
 
     // Start is called before the first frame update
@@ -90,24 +94,36 @@ public class InputManager : MonoBehaviour
             // Kiểm tra phím di chuyển trái
             if (moveLeft)
             {
-                player.GetComponent<PlayerMovement>().HandleMovement(-1);
-                //Debug.Log("Left");
+                _inputRouter.PressArrowLeft(player);
             }
 
             // Kiểm tra phím di chuyển phải
             if (moveRight)
             {
-                player.GetComponent<PlayerMovement>().HandleMovement(1);
-                //Debug.Log("Right");
+                _inputRouter.PressArrowRight(player);
             }
+        }
+        else
+        {
+           _inputRouter.PressLeftAndRight(player);
         }
         if (Input.GetKeyDown(playerKeys.attack))
         {
-            player.GetComponent<PlayerAttack>().HandleAttack();
+            _inputRouter.PressX(player);
         }
 
-        
-
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            _inputRouter.PressESC();
+        }
+        if(Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            _inputRouter.PressArowDown();
+        }
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            _inputRouter.PressArrowUp();
+        }
     }
 
     public IEnumerator WaitToStartGame()
@@ -126,5 +142,25 @@ public class InputManager : MonoBehaviour
             }
             yield return null;
         }
+    }
+    public void WaitToReturnHub()
+    {
+        StartCoroutine(WaitToReturnHubCoroutine());
+    }
+    public IEnumerator WaitToReturnHubCoroutine()
+    {
+        Debug.Log("Press X to return Hub");
+        while (true)
+        {
+            if(Input.GetKeyDown(KeyCode.X))
+            {
+                Debug.Log("X pressed");
+                AudioManager.Instance.AudioSourceBGM.Stop();
+                SceneManager.LoadSceneAsync("Main Menu");   
+                yield break;
+            }
+            yield return null;
+        }
+        
     }
 }

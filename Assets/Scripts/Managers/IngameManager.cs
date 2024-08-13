@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class IngameManager : MonoBehaviour, IHub
 {
@@ -10,7 +13,7 @@ public class IngameManager : MonoBehaviour, IHub
 
     private int _max_iteration;
     private int _max_iterator;
-    private int _current_iteration;
+    [SerializeField] private int _current_iteration;
     private int _current_iterator;
 
     [SerializeField] private LevelConfig _levelConfig;
@@ -23,6 +26,12 @@ public class IngameManager : MonoBehaviour, IHub
     private List<GameObject> _iterators;
     private List<List<IAction>> _whiteRecords;
     private List<List<IAction>> _blackRecords;
+
+    //private Coroutine _white_record;
+    //private List<Coroutine> _black_records;
+    private List<Coroutine> _coroutines;
+
+    private Coroutine _timer_coroutine;
 
     // Start is called before the first frame update
     void Start()
@@ -46,6 +55,7 @@ public class IngameManager : MonoBehaviour, IHub
         _iterators = new List<GameObject>();
         _whiteRecords = new List<List<IAction>>();
         _blackRecords = new List<List<IAction>>();
+        _coroutines = new List<Coroutine>();
 
         foreach (Peer item in _peers)
         {
@@ -53,26 +63,32 @@ public class IngameManager : MonoBehaviour, IHub
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator CountDownTimer()
     {
+        while (_timer > 0)
+        {
+            _timer -= Time.deltaTime;
+            SetTimerUI();
+            yield return new WaitForEndOfFrame();
+        }
+        if(_timer <= 0)
+        {
+            /*RestartIteration();*/
+            StartCoroutine(IterationFailure());
 
-        CountDownTimer();
+        }
+        yield return null;
     }
 
-    private void CountDownTimer()
+    private void SetTimerUI()
     {
-        _timer -= Time.deltaTime;
         _gameSceneUIManager.SetTimerText(_timer);
         _gameSceneUIManager.SetTimeSlider(_timer, _max_time);
     }
 
     public void PrepareIteration()
     {
-        //Set iter text UI
-        _gameSceneUIManager.SetIterText(_current_iteration + 1, _max_iteration);
-        _gameSceneUIManager.SetIconIter(_current_iteration + 1);
-
+        PrepareUI();
         _current_iterator = (_current_iteration % 2 == 0) ? 0 : (_current_iteration + 1) / 2;
 
         // Clear old iterator
@@ -107,33 +123,77 @@ public class IngameManager : MonoBehaviour, IHub
                 if (obj != null) _iterators.Add(obj);
             }
         }
-
         // Set player
         _inputManager.SetPlayer(GetCurrentPlayer());
-
-        // Set timer
-        _max_time = _levelConfig.iterTimes[_current_iteration];
-        _timer = _max_time;
 
         if (_current_iteration >= _max_iteration)
         {
             Debug.Log("You win");
         }
     }
+    private void PrepareUI()
+    {
+        //Enable move to start
+        _gameSceneUIManager.EnableUpperText();
 
+        //Set iter text UI
+        _gameSceneUIManager.SetIterText(_current_iteration + 1, _max_iteration);
+        _gameSceneUIManager.SetIconIter(_current_iteration + 1);
+
+        // Set timer
+        _max_time = _levelConfig.iterTimes[_current_iteration];
+        _timer = _max_time;
+        SetTimerUI();
+    }
     public void BackToPreviousIteration()
     {
+        StopAnyLogicCoroutine();
         _current_iteration -= 1;
-        _current_iterator = (_current_iteration % 2 == 0) ? 0 : (_current_iteration + 1) / 2;
+        //_current_iterator = (_current_iteration % 2 == 0) ? 0 : (_current_iteration + 1) / 2;
         PrepareIteration();
+        StartCoroutine(_inputManager.WaitToStartGame());
     }
+    private void StopAnyLogicCoroutine()
+    {
+        // Still bugging, can't fix & won't fix
+        // Clear coroutines
+        foreach (Coroutine record in _coroutines)
+        {
+            if (record != null)
+                StopCoroutine(record);
+        }
+        _coroutines.Clear();
 
+        // End timer
+        StopCoroutine(_timer_coroutine);
+        //End record 
+        _recordManager.isStopRecording = true;
+        // Disable keyboard
+        _inputManager.FreePlayer();
+        GameManager.Instance.SoftPause();
+
+        //if (_white_record != null)
+        //{
+        //    StopCoroutine(_white_record);
+        //}
+        //if (_black_records != null)
+        //{
+        //    foreach (Coroutine record in _black_records)
+        //    {
+        //        StopCoroutine(record);
+        //    }
+        //    _black_records.Clear();
+        //}
+    }
     public void StartIteration()
     {
+        GameManager.Instance.SoftContinue();
+
         // Debug.Log(_whiteRecords.Count);
         // Debug.Log(_blackRecords.Count);
         Debug.Log("Start Iteration");
         // Even is white
+        Debug.Log("Current iteration : " + _current_iteration);
         if (_current_iteration % 2 == 0)
         {
             // Start recording
@@ -142,7 +202,11 @@ public class IngameManager : MonoBehaviour, IHub
             // Run record if has
             for (int i = 0; i < _blackRecords.Count; i++)
             {
-                _recordManager.RunRecord(_blackRecords[i], _iterators[i + 1]);
+                List<Coroutine> records =  _recordManager.RunRecord(_blackRecords[i], _iterators[i + 1]);
+                //_black_records.Add(record);
+                //_coroutines.Add(record);
+                _coroutines = _coroutines.Concat(records).ToList();
+                
             }
         }
         // Odd is black
@@ -152,24 +216,36 @@ public class IngameManager : MonoBehaviour, IHub
             StartCoroutine(_recordManager.StartRecord(_max_time, _blackRecords));
 
             // Run record if has
-            _recordManager.RunRecord(_whiteRecords[0], _iterators[0]);
+            //_white_record =  _recordManager.RunRecord(_whiteRecords[0], _iterators[0]);
+            List<Coroutine> records = _recordManager.RunRecord(_whiteRecords[0], _iterators[0]);
+            _coroutines = _coroutines.Concat(records).ToList();
             for (int i = 0; i < _blackRecords.Count - 1; i++)
             {
-                _recordManager.RunRecord(_blackRecords[i], _iterators[i + 1]);
+                List<Coroutine> records1 = _recordManager.RunRecord(_blackRecords[i], _iterators[i + 1]);
+                //_black_records.Add(record);
+                _coroutines = _coroutines.Concat(records1).ToList();
             }
         }
 
         _gameSceneUIManager.DisableUpperText();
+        _timer_coroutine = StartCoroutine(CountDownTimer());
     }
 
     public void EndIteration()
     {
+        StopAnyLogicCoroutine();
+
         _current_iteration++;
-        _inputManager.FreePlayer();
-        _recordManager.isStop = true;
-        PrepareIteration();
-        _gameSceneUIManager.EnableUpperText();
-        StartCoroutine(_inputManager.WaitToStartGame());
+        if (_current_iteration == _max_iteration)
+        {
+            _gameSceneUIManager.LevelCompleted();
+            _inputManager.WaitToReturnHub();
+        }
+        else
+        {
+            PrepareIteration();
+            StartCoroutine(_inputManager.WaitToStartGame());
+        }
     }
 
     public GameObject GetCurrentPlayer()
@@ -178,7 +254,9 @@ public class IngameManager : MonoBehaviour, IHub
         {
             //Debug.Log(_iterators.Count);
             //Debug.Log(_iterators[_current_iterator]);
+            Debug.Log("Current iterator : " + _current_iterator);
             return _iterators[_current_iterator];
+
         }
         else
         {
@@ -187,21 +265,24 @@ public class IngameManager : MonoBehaviour, IHub
         }
     }
 
-    public void SendMessage(string message, Peer sender)
+    public void SendMessage(string message, Peer sender, GameObject obj)
     {
         // Resolve message here
         if (message == IngameMessage.Complete.ToString())
         {
-            //Iter white in even iteration reachs gate
-            if (_current_iteration % 2 == 0)
+            if(obj == _iterators[0])
             {
-                Debug.Log("Complete");
-                EndIteration();
-            }
-            //Iter white in odd iteration reachs gate
-            else
-            {
-                IterationFailure();
+                IterSpawner.Instance.Despawn(obj.transform);
+                if (_current_iteration % 2 == 0)
+                {
+                    Debug.Log("Complete");
+                    EndIteration();
+                }
+                //Iter white in odd iteration reachs gate
+                else
+                {
+                    RestartIteration();
+                }
             }
         }
     }
@@ -213,9 +294,43 @@ public class IngameManager : MonoBehaviour, IHub
     }
     IEnumerator IterationFailure()
     {
+        StopAnyLogicCoroutine();
         _gameSceneUIManager.EnableFailedText();
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
+        _gameSceneUIManager.DisableFailedText();
         PrepareIteration();
-        yield return null;
+        StartCoroutine(_inputManager.WaitToStartGame());
+        yield break;
+    }
+    public void RestartIteration()
+    {
+        StartCoroutine(IterationFailure());
+    }
+    public void RedoIteration()
+    {
+        StopAnyLogicCoroutine();
+        PrepareIteration();
+        StartCoroutine(_inputManager.WaitToStartGame());
+    }
+    public void CheckBulletTrigger(GameObject obj)
+    {
+        if(obj == _iterators[_current_iterator])
+        {
+            RestartIteration();
+        }
+        else if((obj != _iterators[_current_iterator]) && (obj == _iterators[0]))
+        {
+            EndIteration();
+            _whiteRecords.Clear();
+            Debug.Log("End iteration by shooting");
+        }
+    }
+    public void RestartLevel()
+    {
+        StopAnyLogicCoroutine();
+        _current_iteration = 0;
+        PrepareIteration();
+        StartCoroutine(_inputManager.WaitToStartGame());
+
     }
 }

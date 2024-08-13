@@ -29,7 +29,7 @@ public class Gate : Peer
         }
         if (collision.CompareTag("Player"))
         {
-            Send(IngameMessage.Complete.ToString());
+            Send(IngameMessage.Complete.ToString(), collision.gameObject);
         }
     }
 }
