@@ -200,6 +200,7 @@ public class RecordManager : MonoBehaviour
             }
             yield return new WaitForEndOfFrame();
         }
+        actor.GetComponent<PlayerModel>().ChangeState();
 
         Debug.Log("End Run");
 
@@ -217,7 +218,9 @@ public class RecordManager : MonoBehaviour
         if (listAction.Count > 0)
         {
             Coroutine record = StartCoroutine(Run(listAction, actor, res => { listCoroutines.Add(res); }));
+            Debug.Log("Run record, record count : " + listCoroutines.Count);
             listCoroutines.Add(record);
+            
         }
         return listCoroutines;
     }

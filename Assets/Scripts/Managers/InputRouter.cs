@@ -51,9 +51,16 @@ public class InputRouter : MonoBehaviour
     {
         _gameSceneUIManager.HandleOption(-1);
     }
-    public void PressArowDown()
+    public void PressArowDown(GameObject player)
     {
-        _gameSceneUIManager.HandleOption(1);
+        if (!_gameSceneUIManager.PausePanel.gameObject.activeSelf)
+        {
+            player.GetComponent<PlayerMovement>().FallDown();
+        }
+        else
+        {
+            _gameSceneUIManager.HandleOption(1);
+        }
     }
     public void PressESC() 
     {

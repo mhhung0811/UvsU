@@ -118,7 +118,7 @@ public class InputManager : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.DownArrow))
         {
-            _inputRouter.PressArowDown();
+            _inputRouter.PressArowDown(player);
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -128,7 +128,6 @@ public class InputManager : MonoBehaviour
 
     public IEnumerator WaitToStartGame()
     {
-        Debug.Log("wait");
         //yield return new WaitForSeconds(0.5f);
         while (true)
         {
@@ -149,12 +148,10 @@ public class InputManager : MonoBehaviour
     }
     public IEnumerator WaitToReturnHubCoroutine()
     {
-        Debug.Log("Press X to return Hub");
         while (true)
         {
             if(Input.GetKeyDown(KeyCode.X))
             {
-                Debug.Log("X pressed");
                 AudioManager.Instance.AudioSourceBGM.Stop();
                 SceneManager.LoadSceneAsync("Main Menu");   
                 yield break;
