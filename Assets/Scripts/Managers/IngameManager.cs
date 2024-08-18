@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEditor.Progress;
 
 public class IngameManager : MonoBehaviour, IHub
@@ -127,7 +128,9 @@ public class IngameManager : MonoBehaviour, IHub
                 }
 
             }
+            obj.transform.Find("Canvas").gameObject.SetActive(false);
         }
+        _iterators[_current_iterator].transform.Find("Canvas").gameObject.SetActive(true);
         // Set player
         _inputManager.SetPlayer(GetCurrentPlayer());
 
