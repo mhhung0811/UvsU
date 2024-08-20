@@ -27,13 +27,10 @@ public class IngameManager : MonoBehaviour, IHub
     private List<List<IAction>> _whiteRecords;
     private List<List<IAction>> _blackRecords;
 
-    //private Coroutine _white_record;
-    //private List<Coroutine> _black_records;
     private List<Coroutine> _coroutines;
 
     private Coroutine _timer_coroutine;
-
-    // Start is called before the first frame update
+    
     void Start()
     {
         LoadComponent();
@@ -148,8 +145,10 @@ public class IngameManager : MonoBehaviour, IHub
     public void BackToPreviousIteration()
     {
         StopAnyLogicCoroutine();
-        _current_iteration -= 1;
-        //_current_iterator = (_current_iteration % 2 == 0) ? 0 : (_current_iteration + 1) / 2;
+        StartCoroutine(DelRecordIteraction());
+        
+        _current_iteration--;
+        //_current_iterator = (_current_iteration % 2 == 0) ? 0 : (_current_iteration + 1) / 2;    
         PrepareIteration();
         StartCoroutine(_inputManager.WaitToStartGame());
     }
@@ -172,26 +171,14 @@ public class IngameManager : MonoBehaviour, IHub
         _inputManager.FreePlayer();
         GameManager.Instance.SoftPause();
 
-        //if (_white_record != null)
-        //{
-        //    StopCoroutine(_white_record);
-        //}
-        //if (_black_records != null)
-        //{
-        //    foreach (Coroutine record in _black_records)
-        //    {
-        //        StopCoroutine(record);
-        //    }
-        //    _black_records.Clear();
-        //}
     }
     public void StartIteration()
     {
         GameManager.Instance.SoftContinue();
 
-        // Debug.Log(_whiteRecords.Count);
-        // Debug.Log(_blackRecords.Count);
-        Debug.Log("Start Iteration");
+        Debug.Log(_whiteRecords.Count);
+        Debug.Log(_blackRecords.Count);
+        // Debug.Log("Start Iteration");
         // Even is white
         Debug.Log("Current iteration : " + _current_iteration);
         if (_current_iteration % 2 == 0)
@@ -217,7 +204,7 @@ public class IngameManager : MonoBehaviour, IHub
 
             // Run record if has
             //_white_record =  _recordManager.RunRecord(_whiteRecords[0], _iterators[0]);
-            List<Coroutine> records = _recordManager.RunRecord(_whiteRecords[0], _iterators[0]);
+            List<Coroutine> records = _recordManager.RunRecord(_whiteRecords[^1], _iterators[0]);
             _coroutines = _coroutines.Concat(records).ToList();
             for (int i = 0; i < _blackRecords.Count - 1; i++)
             {
@@ -321,8 +308,8 @@ public class IngameManager : MonoBehaviour, IHub
         else if((obj != _iterators[_current_iterator]) && (obj == _iterators[0]))
         {
             EndIteration();
-            _whiteRecords.Clear();
-            Debug.Log("End iteration by shooting");
+            //_whiteRecords.Clear();
+            //Debug.Log("End iteration by shooting");
         }
     }
     public void RestartLevel()
@@ -332,5 +319,20 @@ public class IngameManager : MonoBehaviour, IHub
         PrepareIteration();
         StartCoroutine(_inputManager.WaitToStartGame());
 
+    }
+
+    // Dirty work here, pls don't interupt
+    private IEnumerator DelRecordIteraction()
+    {
+        yield return new WaitForSeconds(0.7f);
+        if (_whiteRecords.Count > 0)
+        {
+            _whiteRecords.RemoveAt(_whiteRecords.Count - 1);
+
+        }
+        if (_blackRecords.Count > 0)
+        {
+            _blackRecords.RemoveAt(_blackRecords.Count - 1);
+        }
     }
 }

@@ -8,22 +8,8 @@ public class AttackAction : IAction
     public float actionTime { get; set; }
 
     public IEnumerator Execute(GameObject actor)
-    {
-        //Debug.Log("Start Attack");
-        //float i = 0;
-        //while (i < actionTime)
-        //{
-        //    i += Time.deltaTime;
-
-        //    //Debug.Log("Running Left");
-        //    obj.GetComponent<PlayerAttack>().HandleAttack();
-
-        //    yield return new WaitForEndOfFrame();
-        //}
-        
+    {   
         actor.GetComponent<PlayerAttack>().HandleAttack();
-        
-        //Debug.Log("End Attack");
         yield return null;
     }
 

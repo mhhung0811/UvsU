@@ -15,8 +15,6 @@ public class InputManager : MonoBehaviour
     [SerializeField] private RecordKeyConfig playerKeys;
     [SerializeField] private InputRouter _inputRouter;
 
-    private GameObject actor;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -128,8 +126,9 @@ public class InputManager : MonoBehaviour
 
     public IEnumerator WaitToStartGame()
     {
-        Debug.Log("wait");
-        //yield return new WaitForSeconds(0.5f);
+        //Debug.Log("wait");
+        GameManager.Instance.SoftPause();
+        yield return new WaitForSeconds(0.75f);
         while (true)
         {
             if (Input.GetKeyDown(playerKeys.jump) ||
@@ -138,6 +137,7 @@ public class InputManager : MonoBehaviour
                 Input.GetKeyDown(playerKeys.attack))
             {
                 ingameManager.StartIteration();
+                GameManager.Instance.SoftContinue();
                 yield break;
             }
             yield return null;
