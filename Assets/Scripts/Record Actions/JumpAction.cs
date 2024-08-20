@@ -15,13 +15,12 @@ public class JumpAction : IAction
         {
             i += Time.deltaTime;
 
-            //Debug.Log("Running Left");
             actor.GetComponent<PlayerMovement>().HandleStartJump();
 
             yield return new WaitForEndOfFrame();
         }
         actor.GetComponent<PlayerMovement>().HandleEndJump();
-        Debug.Log("End Jump");
+        //Debug.Log("End Jump");
         yield return null;
     }
 

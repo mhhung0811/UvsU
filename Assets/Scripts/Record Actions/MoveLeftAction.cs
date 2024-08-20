@@ -16,7 +16,7 @@ public class MoveLeftAction : IAction
             i += Time.deltaTime;
 
             //Debug.Log("Running Left");
-            bool has_click_left = false;
+            bool has_click_left;
             actor.GetComponent<PlayerMovement>().HandleMovement(-1);
             has_click_left = true;
 
