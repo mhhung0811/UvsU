@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] private PlayerManager _player_manager;
+    [SerializeField] private CapsuleCollider2D _capsule_collider_2d;
     [SerializeField] private PlayerAnimation _animations;
     [SerializeField] private PlayerModel _model;
     [SerializeField] private Rigidbody2D _rigidBody;
@@ -23,8 +25,7 @@ public class PlayerMovement : MonoBehaviour
     // jump stuff
     private float jumpMaxTime = 0.175f;
     private float jumpMinTime = 0.03f;
-    private float jumpTimer = 0f;
-
+    private float jumpTimer = 0f; 
 
     private void Awake()
     {
@@ -157,5 +158,25 @@ public class PlayerMovement : MonoBehaviour
     public bool WallCheck()
     {
         return Physics2D.OverlapCircle(_wallCheck.position, 0.1f, _groundLayer);
+    }
+
+    public void FallDown()
+    {
+        GameObject obj = _model._current_one_way_platfrom;
+        if (obj != null)
+        {
+            StartCoroutine(DisableCollision(obj));
+        }
+    }
+    IEnumerator DisableCollision(GameObject obj)
+    {
+        BoxCollider2D boxCollider = obj.GetComponent<BoxCollider2D>();
+        Physics2D.IgnoreCollision(_capsule_collider_2d, boxCollider);
+
+        yield return new WaitForSeconds(0.25f);
+
+        Physics2D.IgnoreCollision(_capsule_collider_2d, boxCollider, false);
+
+        yield return null;
     }
 }
