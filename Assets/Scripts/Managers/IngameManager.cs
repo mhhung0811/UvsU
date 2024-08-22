@@ -9,6 +9,12 @@ using static UnityEditor.Progress;
 
 public class IngameManager : MonoBehaviour, IHub
 {
+    [SerializeField] private Grid _grid;
+
+    private List<LevelConfig> list_level_configs = new List<LevelConfig>();
+    private LevelConfig _current_level_config;
+    private GameObject _current_map;
+
     private float _max_time;
     private float _timer;
 
@@ -31,9 +37,11 @@ public class IngameManager : MonoBehaviour, IHub
     private List<Coroutine> _coroutines =  new List<Coroutine>();
 
     private Coroutine _timer_coroutine;
+
     
     void Start()
     {
+        PrepareMap();
         LoadComponent();
         PrepareIteration();
         AudioManager.Instance.PlayBGM(0);
@@ -41,10 +49,10 @@ public class IngameManager : MonoBehaviour, IHub
 
     private void LoadComponent()
     {
+        
         _current_iteration = 0;
         _current_iterator = -1;
-        _max_iteration = _levelConfig.iterTimes.Count;
-        _max_iterator = _levelConfig.iterPositions.Count;
+        
 
         //Initiate list icon iteration
         _gameSceneUIManager.InitiateIconIter(_max_iteration);
@@ -87,6 +95,8 @@ public class IngameManager : MonoBehaviour, IHub
     public void PrepareIteration()
     {
         PrepareUI();
+        //Reload component in map for new iteration
+        _current_map.GetComponent<Map>()?.ReLoadMap();
         _current_iterator = (_current_iteration % 2 == 0) ? 0 : (_current_iteration + 1) / 2;
 
         // Clear old iterator
@@ -99,10 +109,24 @@ public class IngameManager : MonoBehaviour, IHub
         for (int i = 0; i <= (_current_iteration + 1) / 2; i++)
         {
             GameObject obj = null;
+            Transform spawn_pos = _current_map.GetComponent<Map>().list_spawn_point[i];
+            Map test = _current_map.GetComponent<Map>();
+            if(test == null)
+            {
+                Debug.Log("test is null");
+            }
+            if (spawn_pos == null)
+            {
+                Debug.Log("Spawn pos null");
+            }
+            else
+            {
+                Debug.Log(spawn_pos.position);
+            }
             //Debug.Log(i);
             if (i == 0)
             {
-                obj = IterSpawner.Instance.Spawn("IterWhite", _levelConfig.iterPositions[i], Vector3.zero, 1);
+                obj = IterSpawner.Instance.Spawn("IterWhite", spawn_pos.position, Vector3.zero, 1);
                 if (obj != null)
                 {
                     if (_iterators.Count > 0)
@@ -117,7 +141,8 @@ public class IngameManager : MonoBehaviour, IHub
             }
             else
             {
-                obj = IterSpawner.Instance.Spawn("IterBlack", _levelConfig.iterPositions[i], Vector3.zero, -1);
+                
+                obj = IterSpawner.Instance.Spawn("IterBlack", spawn_pos.position, Vector3.zero, -1);
                 if (obj != null)
                 {
                     obj.GetComponent<PlayerModel>().LoadComponent();
@@ -145,9 +170,42 @@ public class IngameManager : MonoBehaviour, IHub
         _gameSceneUIManager.SetIconIter(_current_iteration + 1);
 
         // Set timer
-        _max_time = _levelConfig.iterTimes[_current_iteration];
+        _max_time = _current_level_config.iterTimes[_current_iteration];
         _timer = _max_time;
         SetTimerUI();
+    }
+    private void PrepareMap()
+    {
+        list_level_configs = GameManager.Instance.GetAllLevelConfigs();
+        if(list_level_configs.Count == 0)
+        {
+            Debug.Log("Do not have any config for level");
+            return;
+        }
+        foreach (LevelConfig level in list_level_configs)
+        {
+            if(level.level_id == GameManager.Instance.Current_level)
+            {
+                _current_level_config = level;
+                _max_iteration = level.iterTimes.Count;
+                _max_iterator = (level.iterTimes.Count) + 1 / 2;
+                _current_map = Instantiate(level.map);
+                _current_map.SetActive(true);
+                _current_map.transform.parent = _grid.transform;
+                var spikes = _current_map.GetComponentInChildren<Spikes>();
+                if (spikes != null)
+                {
+                    spikes.ingameManager = this;
+                    Debug.Log("Spikes == this");
+                }
+                _peers.Add(_current_map.GetComponentInChildren<Peer>());
+
+                Debug.Log("Map Generated");
+                break;
+            }
+        }
+        
+        
     }
     public void BackToPreviousIteration()
     {
@@ -305,7 +363,7 @@ public class IngameManager : MonoBehaviour, IHub
         PrepareIteration();
         StartCoroutine(_inputManager.WaitToStartGame());
     }
-    public void CheckBulletTrigger(GameObject obj)
+    public void CheckBulletSpikeTrigger(GameObject obj)
     {
         if(obj == _iterators[_current_iterator])
         {
@@ -352,4 +410,5 @@ public class IngameManager : MonoBehaviour, IHub
             _blackRecords.RemoveAt(_blackRecords.Count - 1);
         }
     }
+    
 }

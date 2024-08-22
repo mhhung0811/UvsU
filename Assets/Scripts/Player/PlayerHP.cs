@@ -28,7 +28,7 @@ public class PlayerHP : MonoBehaviour, IDamageable
     {
         if( _health <= 0 )
         {
-            _in_game_manager.CheckBulletTrigger(gameObject);
+            _in_game_manager.CheckBulletSpikeTrigger(gameObject);
             _health = 1;
         }
     }

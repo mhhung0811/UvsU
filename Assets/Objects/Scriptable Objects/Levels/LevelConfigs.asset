@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63327fc1a439bec49962574ae2b5d01b, type: 3}
+  m_Name: LevelConfigs
+  m_EditorClassIdentifier: 
+  all_level_configs:
+  - level_id: 1
+    map: {fileID: 2312860711716770671, guid: 7c8856545023a7f4f95f85a411db2ffb, type: 3}
+    iterTimes:
+    - 10
+    - 10
+    - 10
+  - level_id: 2
+    map: {fileID: 2949987262785666486, guid: 0b74012cf710ca6418ab93e524fabfa9, type: 3}
+    iterTimes:
+    - 10
+    - 10
+    - 10
+  - level_id: 3
+    map: {fileID: 5863730992632262503, guid: 2cef6ee6325c51245abcc7cfe5aef940, type: 3}
+    iterTimes:
+    - 10
+    - 10
+    - 10
+    - 10
+    - 10
+  - level_id: 4
+    map: {fileID: 3929063771357232678, guid: 4501cca69d0078f43880a49fdcba65b1, type: 3}
+    iterTimes:
+    - 10
+    - 10
+    - 10
+  - level_id: 5
+    map: {fileID: 7477105373032841699, guid: 4414b7f7160d8a643b480c2c833c7339, type: 3}
+    iterTimes:
+    - 10
+    - 10
+    - 10
+    - 10
+    - 10
+  - level_id: 6
+    map: {fileID: 615675522170487458, guid: ff15442ceb8e4f746b6fb856648603e1, type: 3}
+    iterTimes:
+    - 10
+    - 10
+    - 10
+    - 10
+    - 10
+  - level_id: 7
+    map: {fileID: 952368255809740694, guid: 044027da8e98ae64ab37cb534c61b674, type: 3}
+    iterTimes:
+    - 10
+    - 10
+    - 10
+    - 10
+    - 10
+    - 10
+    - 10

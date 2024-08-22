@@ -13,6 +13,10 @@ public abstract class Peer : MonoBehaviour
 
     public void Send(string message, GameObject obj)
     {
+        if(_hub == null)
+        {
+            Debug.Log("can not find hub");
+        }
         _hub.SendMessage(message, this, obj);
     }
 
