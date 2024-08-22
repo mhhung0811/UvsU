@@ -14,6 +14,7 @@ public class TriggerWall : MonoBehaviour
         Debug.Log("Has trigger checkpoint");
         if(collision.gameObject.layer == 7)
         {
+            gameObject.SetActive(false);
             foreach(GameObject wall in _walls)
             {
                 wall.SetActive(!wall.activeSelf);

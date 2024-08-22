@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    [SerializeField] private AudioConfigs audioConfigs;     
+    [SerializeField] private AudioConfigs audioConfigs;
+    [SerializeField] private LevelConfigs levelConfigs;
     public bool isPauseGame { get; private set; }
     public bool isSoftPauseGame { get; private set; }
 
-    private int _current_level = 1;
+    [SerializeField] private int _current_level = 1;
 
     public int Current_level
     {
@@ -50,5 +51,9 @@ public class GameManager : Singleton<GameManager>
     public void SoftContinue()
     {
         isSoftPauseGame = false;
+    }
+    public List<LevelConfig> GetAllLevelConfigs()
+    {
+        return levelConfigs.all_level_configs;
     }
 }
