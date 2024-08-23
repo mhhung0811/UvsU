@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     // jump stuff
     private float jumpMaxTime = 0.15f;
     private float jumpMinTime = 0.03f;
-    private float jumpTimer = 0f; 
+    private float jumpTimer = 0f;
 
     private void Awake()
     {

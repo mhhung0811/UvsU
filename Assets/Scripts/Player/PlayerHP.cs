@@ -6,6 +6,8 @@ public class PlayerHP : MonoBehaviour, IDamageable
 {
     [SerializeField] private IngameManager _in_game_manager;
 
+    public int _type;
+
     private int _health;
 
     private void Start()

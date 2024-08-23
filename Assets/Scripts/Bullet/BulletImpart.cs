@@ -19,6 +19,10 @@ public class BulletImpart : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.GetComponent<Gate>() != null)
+        {
+            return;
+        }
         collision.gameObject.GetComponent<IDamageable>()?.ReceiveDamage(_damage);
         BulletSpawner.Instance.Despawn(transform);
     }
