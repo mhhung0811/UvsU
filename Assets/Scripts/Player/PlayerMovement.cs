@@ -55,7 +55,7 @@ public class PlayerMovement : MonoBehaviour
     private void Initialize()
     {
         _runVelocity = 8f;
-        _jumpForce = 20f;
+        _jumpForce = 17.5f;
         _moveDirection = 0;
         _timer = 0;
         _multi = 115f;
