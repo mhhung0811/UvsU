@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool _is_jumping;
 
     // jump stuff
-    private float jumpMaxTime = 0.175f;
+    private float jumpMaxTime = 0.15f;
     private float jumpMinTime = 0.03f;
     private float jumpTimer = 0f; 
 
