@@ -55,6 +55,7 @@ public class InputRouter : MonoBehaviour
     {
         if (!_gameSceneUIManager.PausePanel.gameObject.activeSelf)
         {
+            Debug.Log("down");
             player.GetComponent<PlayerMovement>().FallDown();
         }
         else

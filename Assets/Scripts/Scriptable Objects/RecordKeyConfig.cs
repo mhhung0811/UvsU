@@ -9,6 +9,8 @@ public class RecordKeyConfig : ScriptableObject
     public KeyCode moveLeft;
     [Header("Move Right")]
     public KeyCode moveRight;
+    [Header("Move Down")]
+    public KeyCode moveDown;
     [Header("Jump")]
     public KeyCode jump;
     [Header("Attack")]
