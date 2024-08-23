@@ -17,7 +17,7 @@ public class TrapLaserController : MonoBehaviour
         {
             foreach(GameObject laser in _list_lasers)
             {
-                laser.GetComponent<Laser>()?.EnableLaser();
+                //laser.GetComponent<Laser>()?.EnableLaser();
             }
             yield return new WaitForSeconds(5f);
         }

@@ -38,6 +38,7 @@ public class IngameManager : MonoBehaviour, IHub
 
     private Coroutine _timer_coroutine;
 
+    [SerializeField] private InGameEventCenter _gameEventCenter;
     
     void Start()
     {
@@ -209,6 +210,7 @@ public class IngameManager : MonoBehaviour, IHub
     }
     public void BackToPreviousIteration()
     {
+        _gameEventCenter.Notify();
         StopAnyLogicCoroutine();
         StartCoroutine(DelRecordIteraction());
         
@@ -285,6 +287,7 @@ public class IngameManager : MonoBehaviour, IHub
 
     public void EndIteration()
     {
+        _gameEventCenter.Notify();
         StopAnyLogicCoroutine();
         Debug.Log("list coroutine size in end : " + _coroutines.Count);
         _current_iteration++;
@@ -359,6 +362,7 @@ public class IngameManager : MonoBehaviour, IHub
     }
     public void RedoIteration()
     {
+        _gameEventCenter.Notify();
         StopAnyLogicCoroutine();
         PrepareIteration();
         StartCoroutine(_inputManager.WaitToStartGame());
@@ -389,6 +393,7 @@ public class IngameManager : MonoBehaviour, IHub
     }
     public void RestartLevel()
     {
+        _gameEventCenter.Notify(); 
         StopAnyLogicCoroutine();
         _current_iteration = 0;
         PrepareIteration();

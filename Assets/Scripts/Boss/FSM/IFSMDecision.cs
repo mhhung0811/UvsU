@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IFSMDecision 
+public abstract class IFSMDecision : MonoBehaviour 
 {
-    bool Decision();
+    public abstract bool Decision();
 }
     

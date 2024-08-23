@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IFSMAction
+public abstract class IFSMAction : MonoBehaviour
 {
-    void Action();
+    public abstract void Action();
 }
