@@ -27,6 +27,7 @@ public class RecordManager : MonoBehaviour
         {
             {recordKeys.moveLeft, 0 },
             {recordKeys.moveRight, 0 },
+            {recordKeys.moveDown, 0 },
             {recordKeys.jump, 0 },
             {recordKeys.attack, 0 }
         };
@@ -34,6 +35,7 @@ public class RecordManager : MonoBehaviour
         {
             {recordKeys.moveLeft, false },
             {recordKeys.moveRight, false },
+            {recordKeys.moveDown, false },
             {recordKeys.jump, false },
             {recordKeys.attack, false }
         };
@@ -59,9 +61,13 @@ public class RecordManager : MonoBehaviour
             }
             if (Input.GetKey(recordKeys.moveRight) && !keyPressed[recordKeys.moveRight])
             {
-                //Debug.Log("record move right");
                 keyPressed[recordKeys.moveRight] = true;
                 StartCoroutine(EndAction(recordKeys.moveRight, timer, time));
+            }
+            if (Input.GetKey(recordKeys.moveDown) && !keyPressed[recordKeys.moveDown])
+            {
+                keyPressed[recordKeys.moveDown] = true;
+                StartCoroutine(EndAction(recordKeys.moveDown, timer, time));
             }
             if (Input.GetKey(recordKeys.jump) && !keyPressed[recordKeys.jump])
             {
@@ -109,6 +115,12 @@ public class RecordManager : MonoBehaviour
             keyPos[keycode] = actions.Count;
             actions.Add(action);
         }
+        else if (keycode == recordKeys.moveDown)
+        {
+            action = new MoveDownAction(startTime, 0f);
+            keyPos[keycode] = actions.Count;
+            actions.Add(action);
+        }
         else if (keycode == recordKeys.jump)
         {
             action = new JumpAction(startTime, 0f);
@@ -135,6 +147,7 @@ public class RecordManager : MonoBehaviour
         yield return StartCoroutine(StartAction(keycode, startTime, endTime, result => { timer = result; }));
         if (keycode == recordKeys.moveLeft ||
             keycode == recordKeys.moveRight ||
+            keycode == recordKeys.moveDown ||
             keycode == recordKeys.jump ||
             keycode == recordKeys.attack)
         {
