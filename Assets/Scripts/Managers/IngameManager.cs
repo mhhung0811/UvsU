@@ -43,7 +43,7 @@ public class IngameManager : MonoBehaviour, IHub
     {
         PrepareMap();
         LoadComponent();
-        PrepareIteration();
+        StartCoroutine(PrepareIteration());
         AudioManager.Instance.PlayBGM(0);
     }
 
@@ -92,8 +92,9 @@ public class IngameManager : MonoBehaviour, IHub
         _gameSceneUIManager.SetTimeSlider(_timer, _max_time);
     }
 
-    public void PrepareIteration()
+    public IEnumerator PrepareIteration()
     {
+        yield return new WaitForSeconds(0.25f);
         PrepareUI();
         //Reload component in map for new iteration
         _current_map.GetComponent<Map>()?.ReLoadMap();
@@ -104,6 +105,7 @@ public class IngameManager : MonoBehaviour, IHub
         {
             IterSpawner.Instance.Despawn(iter.transform);
         }
+        _iterators.Clear();
 
         // Spawn new iterator
         for (int i = 0; i <= (_current_iteration + 1) / 2; i++)
@@ -121,9 +123,9 @@ public class IngameManager : MonoBehaviour, IHub
             }
             else
             {
-                Debug.Log(spawn_pos.position);
+                //Debug.Log(spawn_pos.position);
             }
-            //Debug.Log(i);
+            Debug.Log(i);
             if (i == 0)
             {
                 obj = IterSpawner.Instance.Spawn("IterWhite", spawn_pos.position, Vector3.zero, 1);
@@ -141,13 +143,15 @@ public class IngameManager : MonoBehaviour, IHub
             }
             else
             {
-                
+                Debug.Log("Spawn black");
+                Debug.Log(_iterators.Count);
                 obj = IterSpawner.Instance.Spawn("IterBlack", spawn_pos.position, Vector3.zero, -1);
                 if (obj != null)
                 {
                     obj.GetComponent<PlayerModel>().LoadComponent();
                     _iterators.Add(obj);
                 }
+                else Debug.Log("Is null");
 
             }
             obj.transform.Find("Canvas").gameObject.SetActive(false);
@@ -214,7 +218,7 @@ public class IngameManager : MonoBehaviour, IHub
         
         _current_iteration--;
         //_current_iterator = (_current_iteration % 2 == 0) ? 0 : (_current_iteration + 1) / 2;    
-        PrepareIteration();
+        StartCoroutine(PrepareIteration());
         StartCoroutine(_inputManager.WaitToStartGame());
     }
     private void StopAnyLogicCoroutine()
@@ -241,8 +245,61 @@ public class IngameManager : MonoBehaviour, IHub
     {
         GameManager.Instance.SoftContinue();
 
-        // Debug.Log(_whiteRecords.Count);
-        // Debug.Log(_blackRecords.Count);
+        //Debug.Log(_whiteRecords.Count);
+        //Debug.Log(_blackRecords.Count);
+
+        // Check records
+        // White iteration
+        if (_current_iterator % 2 == 0)
+        {
+            if (_whiteRecords.Count < _current_iteration / 2) Debug.Log("Bug at Start Iteration");
+            while (_whiteRecords.Count > _current_iteration / 2)
+            {
+                _whiteRecords.RemoveAt(_whiteRecords.Count - 1);
+            }
+            //if (_whiteRecords.Count == _current_iteration / 2)
+            //{
+            //    Debug.Log("True white even");
+            //}
+            //else Debug.Log(_whiteRecords.Count);
+
+            if (_blackRecords.Count < _current_iteration / 2) Debug.Log("Bug at Start Iteration");
+            while (_blackRecords.Count > _current_iteration / 2)
+            {
+                _blackRecords.RemoveAt(_blackRecords.Count - 1);
+            }
+            //if (_blackRecords.Count == _current_iteration / 2)
+            //{
+            //    Debug.Log("True black even");
+            //}
+            //else Debug.Log(_blackRecords.Count);
+        }
+        // Black iteration
+        else
+        {
+            if (_whiteRecords.Count < _current_iteration / 2 + 1) Debug.Log("Bug at Start Iteration");
+            while (_whiteRecords.Count > _current_iteration / 2 + 1)
+            {
+                _whiteRecords.RemoveAt(_whiteRecords.Count - 1);
+            }
+            //if (_whiteRecords.Count == _current_iteration / 2 + 1)
+            //{
+            //    Debug.Log("True white odd");
+            //}
+            //else Debug.Log(_whiteRecords.Count);
+
+            if (_blackRecords.Count < _current_iteration / 2) Debug.Log("Bug at Start Iteration");
+            while (_blackRecords.Count > _current_iteration / 2)
+            {
+                _blackRecords.RemoveAt(_blackRecords.Count - 1);
+            }
+            //if (_blackRecords.Count == _current_iteration / 2)
+            //{
+            //    Debug.Log("True black odd");
+            //}
+            //else Debug.Log(_blackRecords.Count);
+        }
+
         // Even is white
         if (_current_iteration % 2 == 0)
         {
@@ -252,10 +309,14 @@ public class IngameManager : MonoBehaviour, IHub
             // Run record if has
             for (int i = 0; i < _blackRecords.Count; i++)
             {
-                List<Coroutine> records =  _recordManager.RunRecord(_blackRecords[i], _iterators[i + 1]);
-                //_black_records.Add(record);
-                //_coroutines.Add(record);
-                _coroutines = _coroutines.Concat(records).ToList();
+                if (_iterators.Count > i)
+                {
+                    List<Coroutine> records = _recordManager.RunRecord(_blackRecords[i], _iterators[i + 1]);
+                    //_black_records.Add(record);
+                    //_coroutines.Add(record);
+                    _coroutines = _coroutines.Concat(records).ToList();
+                }
+                else Debug.Log("Bug at StarIteration");
                 
             }
         }
@@ -285,6 +346,12 @@ public class IngameManager : MonoBehaviour, IHub
 
     public void EndIteration()
     {
+        foreach (var iterator in _iterators)
+        {
+            iterator.SetActive(false);
+        }
+        BulletSpawner.Instance.DespawnAll();
+
         StopAnyLogicCoroutine();
         Debug.Log("list coroutine size in end : " + _coroutines.Count);
         _current_iteration++;
@@ -295,7 +362,7 @@ public class IngameManager : MonoBehaviour, IHub
         }
         else
         {
-            PrepareIteration();
+            StartCoroutine(PrepareIteration());
             StartCoroutine(_inputManager.WaitToStartGame());
         }
     }
@@ -324,7 +391,8 @@ public class IngameManager : MonoBehaviour, IHub
         {
             if(obj == _iterators[0])
             {
-                IterSpawner.Instance.Despawn(obj.transform);
+                //IterSpawner.Instance.Despawn(obj.transform);
+                //_iterators.Remove(obj);
                 if (_current_iteration % 2 == 0)
                 {
                     EndIteration();
@@ -345,11 +413,17 @@ public class IngameManager : MonoBehaviour, IHub
     }
     IEnumerator IterationFailure()
     {
+        foreach (var iterator in _iterators)
+        {
+            iterator.SetActive(false);
+        }
+        BulletSpawner.Instance.DespawnAll();
+
         StopAnyLogicCoroutine();
         _gameSceneUIManager.EnableFailedText();
         yield return new WaitForSeconds(1f);
         _gameSceneUIManager.DisableFailedText();
-        PrepareIteration();
+        StartCoroutine(PrepareIteration());
         StartCoroutine(_inputManager.WaitToStartGame());
         yield break;
     }
@@ -360,7 +434,7 @@ public class IngameManager : MonoBehaviour, IHub
     public void RedoIteration()
     {
         StopAnyLogicCoroutine();
-        PrepareIteration();
+        StartCoroutine(PrepareIteration());
         StartCoroutine(_inputManager.WaitToStartGame());
     }
     public void CheckBulletSpikeTrigger(GameObject obj)
@@ -383,7 +457,8 @@ public class IngameManager : MonoBehaviour, IHub
             }
             else
             {
-                IterSpawner.Instance.Despawn(obj.transform);
+                //IterSpawner.Instance.Despawn(obj.transform);
+                //_iterators.Remove(obj);
             }
         }
     }
@@ -391,7 +466,7 @@ public class IngameManager : MonoBehaviour, IHub
     {
         StopAnyLogicCoroutine();
         _current_iteration = 0;
-        PrepareIteration();
+        StartCoroutine(PrepareIteration());
         StartCoroutine(_inputManager.WaitToStartGame());
 
     }
