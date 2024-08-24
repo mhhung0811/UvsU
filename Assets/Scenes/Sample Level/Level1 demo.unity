@@ -15911,6 +15911,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _attack_action: {fileID: 1401650137}
+  _inputManager: {fileID: 2000700899}
+  _ingameManager: {fileID: 1129918706}
 --- !u!114 &1401650137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15930,7 +15932,7 @@ MonoBehaviour:
   _laser_render: {fileID: 157335541013959746}
   _warning_line: {fileID: 1292509717}
   _fire_point: {fileID: 1401650135}
-  _gameEventCenter: {fileID: 0}
+  _gameEventCenter: {fileID: 1129918708}
   _cool_down: 0.5
 --- !u!114 &1401650138
 MonoBehaviour:

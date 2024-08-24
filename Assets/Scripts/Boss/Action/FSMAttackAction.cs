@@ -15,6 +15,11 @@ public class FSMAttackAction :  IFSMAction, IObserver
     [SerializeField] private Transform _fire_point;
     [SerializeField] private InGameEventCenter _gameEventCenter;
     private bool _skill_activating;
+    public bool SkillActivating
+    {
+        get { return _skill_activating; }
+        set { _skill_activating = value;}
+    }
     private Vector2 hit_point;
     private Coroutine _coroutine;
     public float Delay
@@ -38,14 +43,6 @@ public class FSMAttackAction :  IFSMAction, IObserver
     }
     public override void Action()
     {
-        if(_skill_activating)
-        {
-            return;
-        }
-        if (_inputManager.Player == null)
-        {
-            return;
-        }
         Vector2 playerPos = GetPlayerPosition();
         _coroutine =  StartCoroutine(ExecuteSkill(playerPos));
     }
@@ -88,6 +85,7 @@ public class FSMAttackAction :  IFSMAction, IObserver
         _warning_line.enabled = false;
         _enemyAnimation.SetTriggerAttack();
         _laser_render.enabled = true;
+        _laser.GetComponent<Laser>().PlayParticles();
 
         yield return new WaitForSeconds(1f);
 

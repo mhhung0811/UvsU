@@ -39,6 +39,12 @@ public class IngameManager : MonoBehaviour, IHub
     private Coroutine _timer_coroutine;
 
     [SerializeField] private InGameEventCenter _gameEventCenter;
+    [SerializeField] private bool _is_playing;
+    public bool IsPlaying
+    {
+        get { return _is_playing; }
+        set { _is_playing = value;}
+    }
     
     void Start()
     {
@@ -50,7 +56,7 @@ public class IngameManager : MonoBehaviour, IHub
 
     private void LoadComponent()
     {
-        
+        _is_playing = false;
         _current_iteration = 0;
         _current_iterator = -1;
         
@@ -223,6 +229,7 @@ public class IngameManager : MonoBehaviour, IHub
     {
         // Still bugging, can't fix & won't fix
         // Clear coroutines
+        _is_playing = false;
         foreach (Coroutine record in _coroutines)
         {
             if (record != null)
@@ -242,7 +249,7 @@ public class IngameManager : MonoBehaviour, IHub
     public void StartIteration()
     {
         GameManager.Instance.SoftContinue();
-
+        _is_playing = true;
         // Debug.Log(_whiteRecords.Count);
         // Debug.Log(_blackRecords.Count);
         // Even is white

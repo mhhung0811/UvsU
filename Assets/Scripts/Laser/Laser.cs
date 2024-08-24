@@ -56,7 +56,7 @@ public class Laser : MonoBehaviour
         ps.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 
-    private void PlayParticles()
+    public void PlayParticles()
     {
         foreach (var ps in _allParticles)
         {
@@ -72,13 +72,6 @@ public class Laser : MonoBehaviour
         }
     }
 
-    private void EnableLineRenderers()
-    {
-        foreach (var lr in _allLineRenderers)
-        {
-            lr.enabled = true;
-        }
-    }
 
     public void DisableLineRenderers()
     {

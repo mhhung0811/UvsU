@@ -5,6 +5,8 @@ using UnityEngine;
 public class AttackDecision :  IFSMDecision
 {
     public FSMAttackAction _attack_action;
+    [SerializeField] private InputManager _inputManager;
+    [SerializeField] private IngameManager _ingameManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +20,14 @@ public class AttackDecision :  IFSMDecision
     }
     public override bool Decision()
     {
-        return _attack_action.Delay <= 0;
+        if(_attack_action.Delay <= 0 && !_attack_action.SkillActivating && _inputManager.Player != null && _ingameManager.IsPlaying)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        
     }
 }
