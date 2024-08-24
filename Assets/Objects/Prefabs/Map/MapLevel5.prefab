@@ -24689,7 +24689,7 @@ MonoBehaviour:
   - trigger_wall: {fileID: 5378714884777267671}
     state: 1
   - trigger_wall: {fileID: 1750581558439802107}
-    state: 1
+    state: 0
   _trigger_point:
   - {fileID: 6743820802531981284}
   - {fileID: 6889318796985413795}

@@ -125,7 +125,7 @@ public class IngameManager : MonoBehaviour, IHub
             {
                 //Debug.Log(spawn_pos.position);
             }
-            Debug.Log(i);
+            //Debug.Log(i);
             if (i == 0)
             {
                 obj = IterSpawner.Instance.Spawn("IterWhite", spawn_pos.position, Vector3.zero, 1);
@@ -143,8 +143,8 @@ public class IngameManager : MonoBehaviour, IHub
             }
             else
             {
-                Debug.Log("Spawn black");
-                Debug.Log(_iterators.Count);
+                //Debug.Log("Spawn black");
+                //Debug.Log(_iterators.Count);
                 obj = IterSpawner.Instance.Spawn("IterBlack", spawn_pos.position, Vector3.zero, -1);
                 if (obj != null)
                 {
@@ -247,11 +247,14 @@ public class IngameManager : MonoBehaviour, IHub
 
         //Debug.Log(_whiteRecords.Count);
         //Debug.Log(_blackRecords.Count);
+        Debug.Log("Iteration: " +  _current_iteration);
 
         // Check records
         // White iteration
-        if (_current_iterator % 2 == 0)
+        if (_current_iteration % 2 == 0)
         {
+            Debug.Log("Bug White" + _current_iteration);
+
             if (_whiteRecords.Count < _current_iteration / 2) Debug.Log("Bug at Start Iteration");
             while (_whiteRecords.Count > _current_iteration / 2)
             {
@@ -277,6 +280,8 @@ public class IngameManager : MonoBehaviour, IHub
         // Black iteration
         else
         {
+            Debug.Log("Bug Black" + _current_iteration);
+
             if (_whiteRecords.Count < _current_iteration / 2 + 1) Debug.Log("Bug at Start Iteration");
             while (_whiteRecords.Count > _current_iteration / 2 + 1)
             {
@@ -293,11 +298,11 @@ public class IngameManager : MonoBehaviour, IHub
             {
                 _blackRecords.RemoveAt(_blackRecords.Count - 1);
             }
-            //if (_blackRecords.Count == _current_iteration / 2)
-            //{
-            //    Debug.Log("True black odd");
-            //}
-            //else Debug.Log(_blackRecords.Count);
+            if (_blackRecords.Count == _current_iteration / 2)
+            {
+                Debug.Log("True black odd" + _blackRecords.Count);
+            }
+            else Debug.Log(_blackRecords.Count);
         }
 
         // Even is white
@@ -332,7 +337,7 @@ public class IngameManager : MonoBehaviour, IHub
             Debug.Log("record count return : " +  records.Count);
             _coroutines = _coroutines.Concat(records).ToList();
             Debug.Log("List coroutine size before: " + _coroutines.Count);
-            for (int i = 0; i < _blackRecords.Count - 1; i++)
+            for (int i = 0; i < _blackRecords.Count; i++)
             {
                 List<Coroutine> records1 = _recordManager.RunRecord(_blackRecords[i], _iterators[i + 1]);
                 //_black_records.Add(record);

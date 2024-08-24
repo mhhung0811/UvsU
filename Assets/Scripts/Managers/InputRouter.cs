@@ -5,7 +5,7 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class InputRouter : MonoBehaviour
 {
-    [SerializeField] private GameSceneUIManager _gameSceneUIManager;
+    [SerializeField] private GameSceneUIManager _gameSceneUIManager;    
 
     public void PressX(GameObject player)
     {
@@ -63,6 +63,7 @@ public class InputRouter : MonoBehaviour
             _gameSceneUIManager.HandleOption(1);
         }
     }
+
     public void PressESC() 
     {
         _gameSceneUIManager.ChangePauseState();
