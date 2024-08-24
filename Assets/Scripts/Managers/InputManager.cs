@@ -12,6 +12,12 @@ public class InputManager : MonoBehaviour
     [SerializeField] private IngameManager ingameManager;
     [SerializeField] private GameSceneUIManager gameSceneUIManager;
     private GameObject player;
+    public GameObject Player
+    { 
+        get { return player; } 
+        set { player = value; }
+    }
+
     [SerializeField] private RecordKeyConfig playerKeys;
     [SerializeField] private InputRouter _inputRouter;
 

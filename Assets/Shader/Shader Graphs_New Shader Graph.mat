@@ -42,9 +42,9 @@ Material:
     m_Ints: []
     m_Floats:
     - _LaserScale: 5
-    - _LaserSmooth: 21.49
-    - _LaserSpeed: 1
-    - _LaserThick: -10
+    - _LaserSmooth: 51.09
+    - _LaserSpeed: 1.5
+    - _LaserThick: -25.17
     m_Colors:
     - _Color: {r: 11.984313, g: 0.6105206, b: 1.2182992, a: 0.3921569}
     - _Tile: {r: 1, g: 1, b: 0, a: 0}

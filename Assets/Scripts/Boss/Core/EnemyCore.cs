@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class EnemyCore : MonoBehaviour
 {
-    [SerializeField] private List<FSMState> fsmStates = new List<FSMState>();
     private FSMState _curent_state;
-    private string _init_state = "Idle";
+    public string _init_state = "Idle";
+    [SerializeField] private EnemyHealth _enemy_health;
+    public List<FSMState> fsmStates = new List<FSMState>();
     private void Start()
     {
         LoadInitState();
+    }
+    private void Update()
+    {
+        Execute();
     }
     void LoadInitState()
     {
@@ -28,12 +33,29 @@ public class EnemyCore : MonoBehaviour
     {
         foreach(FSMState state in fsmStates)
         {
-            if(state.IDstate == state_id)
+            if(state.id_state == state_id)
             {
                 return state;
             }
         }
         return null;
     }
-
+    private void Execute()
+    {
+        if(CanExecuteState())
+        {
+            _curent_state?.UpdateStateEnemy(this);
+        }
+    }
+    private bool CanExecuteState()
+    {
+        if(_enemy_health != null && _enemy_health.Health > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

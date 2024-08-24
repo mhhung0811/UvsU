@@ -2,17 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapLevel6 : MonoBehaviour
+public class MapLevel6 : Map
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void ReLoadMap()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }
