@@ -382,7 +382,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 15
+  m_GravityScale: 10
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -462,6 +462,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62b6c7b4eb61a30489514f4671eaa5dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player_manager: {fileID: 0}
+  _capsule_collider_2d: {fileID: 0}
   _animations: {fileID: 0}
   _model: {fileID: 0}
   _rigidBody: {fileID: 0}
@@ -548,3 +550,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _in_game_manager: {fileID: 0}
+  _type: 1

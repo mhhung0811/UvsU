@@ -9,11 +9,13 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField, Range(0.1f, 1f)] private float _cool_down;
     [SerializeField] private float _cool_down_count;
     [SerializeField] private PlayerAnimation _animation;
+    private PlayerHP _playerHP;
 
     private void Awake()
     {
         this._model = GetComponent<PlayerModel>();
         this._animation = GetComponent<PlayerAnimation>();
+        this._playerHP = GetComponent<PlayerHP>();
     }
     // Start is called before the first frame update
     void Start()
@@ -33,6 +35,7 @@ public class PlayerAttack : MonoBehaviour
     }
     public void HandleAttack()
     {
+        if (_playerHP._type == 0) return;
         if((_cool_down_count <= 0))
         {
             _animation.SetTriggerAttack();

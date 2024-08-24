@@ -10,6 +10,7 @@ public class LevelGate : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //if (collision.GetComponent<BulletImpart>()) return;
         GameManager.Instance.Current_level = _gate_level;
         _mainMenuManager._is_trigger_gate = true;
     }

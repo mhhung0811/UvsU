@@ -88,4 +88,15 @@ public class Spawner : MonoBehaviour
         obj.gameObject.SetActive(false);
         _list_item.Add(obj);
     }
+
+    public void DespawnAll()
+    {
+        foreach(Transform child in _holder)
+        {
+            if (child.gameObject.activeSelf)
+            {
+                Despawn(child);
+            }
+        }
+    }
 }

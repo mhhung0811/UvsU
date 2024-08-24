@@ -12,7 +12,7 @@ public class TriggerWall : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("Has trigger checkpoint");
-        if(collision.gameObject.layer == 7)
+        if(collision.gameObject.layer == 7 || collision.GetComponent<PlayerHP>())
         {
             gameObject.SetActive(false);
             foreach(GameObject wall in _walls)

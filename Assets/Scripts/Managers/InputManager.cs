@@ -120,7 +120,8 @@ public class InputManager : MonoBehaviour
         {
             _inputRouter.PressESC();
         }
-        if(Input.GetKeyDown(KeyCode.DownArrow))
+
+        if(Input.GetKeyDown(playerKeys.moveDown))
         {
             _inputRouter.PressArowDown(player);
         }
